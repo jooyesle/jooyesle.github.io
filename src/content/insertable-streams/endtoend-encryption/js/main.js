@@ -28,7 +28,7 @@ startButton.onclick = start;
 callButton.onclick = call;
 hangupButton.onclick = hangup;
 
-metaData.addEventListenr('change', setMetaData);
+metaData.addEventListner('change', setMetaData);
 cryptoKey.addEventListener('change', setCryptoKey);
 cryptoOffsetBox.addEventListener('change', setCryptoKey);
 muteMiddleBox.addEventListener('change', toggleMute);
