@@ -18,6 +18,7 @@ const startButton = document.querySelector('button#start');
 const callButton = document.querySelector('button#call');
 const hangupButton = document.querySelector('button#hangup');
 
+const metaData = document.querySelector('#metadata');
 const cryptoKey = document.querySelector('#crypto-key');
 const cryptoOffsetBox = document.querySelector('#crypto-offset');
 const banner = document.querySelector('#banner');
@@ -27,6 +28,7 @@ startButton.onclick = start;
 callButton.onclick = call;
 hangupButton.onclick = hangup;
 
+metaData.addEventListenr('change', setMetaData);
 cryptoKey.addEventListener('change', setCryptoKey);
 cryptoOffsetBox.addEventListener('change', setCryptoKey);
 muteMiddleBox.addEventListener('change', toggleMute);
@@ -186,6 +188,10 @@ function setCryptoKey(event) {
     currentCryptoKey,
     useCryptoOffset,
   });
+}
+
+function setMetaData(event) {
+  console.log('Setting metadata to ' + metaData.value);
 }
 
 function toggleMute(event) {
