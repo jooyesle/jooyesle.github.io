@@ -4,7 +4,7 @@ const CanvasRenderingContext2D = OffscreenCanvasRenderingContext2D;
 class Image {};
 class HTMLImageElement {};
 class HTMLVideoElement {};
-self.importScripts('face-api.js');
+self.importScripts('./face-api.js');
 faceapi.env.getEnv().createCanvasElement = function () { return new OffscreenCanvas(640,480); };
 const options = new faceapi.TinyFaceDetectorOptions({ 
 		inputSize	: 320,
