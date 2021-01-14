@@ -13,7 +13,7 @@
 
 'use strict';
 
-let currentMetaData;
+let currentMetaData = "snow";
 
 // Polyfill RTCEncoded(Audio|Video)Frame.getMetadata() (not available in M83, available M84+).
 // The polyfill can not be done on the prototype since its not exposed in workers. Instead,
