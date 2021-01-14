@@ -66,7 +66,9 @@ function dump(encodedFrame, direction, max = 16) {
       'ts=' + encodedFrame.timestamp,
       'ssrc=' + encodedFrame.getMetadata().synchronizationSource
   );
-
+  
+  console.log(typeof(encodedFrame));
+  
   console.log(encodedFrame.getMetadata().myMetaData);
 }
 
