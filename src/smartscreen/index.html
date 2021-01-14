@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+
+    <body>
+        <style type="text/css" media="screen">
+.title {width:700px; height:25px; font-weight:bold }
+.screen > * {
+    display:inline-block;
+}
+.local {width:350px; height:300px;}
+.remote {width:350px; height:300px;}
+.logs {width:700px; height:300px; border:solid 1px black}
+
+        </style>
+        <div class="title">Advanced Prototype App for SmartScreen</div><br/>
+        <div class="screen">
+            <div class="local">
+                <div>Local</div>
+                <video id="local_video" width="320" height="240" style="border: solid 1px black;"></video>
+                <br/>
+                <button onclick="startVideo()">Start Video</button>
+                <button onclick="stopVideo()">Stop Video</button>
+            </div>
+            <div class="remote">
+                <div>Remote</div>
+                <video id="remote_video" width="320" height="240" controls="1" style="border: solid 1px black;"></video>
+                <br/>
+                <button onclick="connect()">Connect</button>
+                <button onclick="disconnect()">Disconnect</button>
+            </div>
+        </div><br/>
+        <div class="logs" id="logbox"></div>
+    </body>
+</html>
+<script src="js/main.js" type="text/javascript"></script>
