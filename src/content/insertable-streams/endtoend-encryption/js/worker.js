@@ -54,7 +54,7 @@ const frameTypeToCryptoOffset = {
 };
 
 function dump(encodedFrame, direction, max = 16) {
-  const data = new Uint8Array(encodedFrame.data);
+  /*const data = new Uint8Array(encodedFrame.data);
   let bytes = '';
   for (let j = 0; j < data.length && j < max; j++) {
     bytes += (data[j] < 16 ? '0' : '') + data[j].toString(16) + ' ';
@@ -64,7 +64,9 @@ function dump(encodedFrame, direction, max = 16) {
       'type=' + (encodedFrame.type || 'audio'),
       'ts=' + encodedFrame.timestamp,
       'ssrc=' + encodedFrame.getMetadata().synchronizationSource
-  );
+  );*/
+  
+  console.log(encodedFrame.data);
 
   console.log(currentMetaData)
 }
