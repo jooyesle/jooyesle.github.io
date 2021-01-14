@@ -49,6 +49,8 @@ const frameTypeToCryptoOffset = {
   undefined: 1,
 };
 
+const metaData = document.querySelector('#metadata'); // change to function parameter
+
 function dump(encodedFrame, direction, max = 16) {
   const data = new Uint8Array(encodedFrame.data);
   let bytes = '';
@@ -62,7 +64,7 @@ function dump(encodedFrame, direction, max = 16) {
       'ssrc=' + encodedFrame.getMetadata().synchronizationSource
   );
   //const metaData = document.querySelector('#metadata');
-  console.log(metaData.log)
+  console.log(metaData.value)
 }
 
 let scount = 0;
