@@ -28,7 +28,8 @@ function polyFillEncodedFrameMetadata(encodedFrame, controller) {
       };
     };
   }
-  controller.enqueue(encodedFrame);*/
+  controller.enqueue(encodedFrame);
+  console.log(encodedFrame.data);*/
   controller.enqueue(currentMetaData);
 }
 
@@ -59,8 +60,8 @@ function dump(encodedFrame, direction, max = 16) {
   for (let j = 0; j < data.length && j < max; j++) {
     bytes += (data[j] < 16 ? '0' : '') + data[j].toString(16) + ' ';
   }
-  /*console.log(performance.now().toFixed(2), direction, bytes.trim(),
-      'len=' + encodedFrame.data.byteLength,
+  console.log(performance.now().toFixed(2), direction, bytes.trim());//,
+      /*'len=' + encodedFrame.data.byteLength,
       'type=' + (encodedFrame.type || 'audio'),
       'ts=' + encodedFrame.timestamp,
       'ssrc=' + encodedFrame.getMetadata().synchronizationSource
