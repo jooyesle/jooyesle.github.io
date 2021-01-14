@@ -52,8 +52,6 @@ const frameTypeToCryptoOffset = {
   undefined: 1,
 };
 
-const metaData = document.querySelector('#metadata'); // change to function parameter
-
 function dump(encodedFrame, direction, max = 16) {
   const data = new Uint8Array(encodedFrame.data);
   let bytes = '';
