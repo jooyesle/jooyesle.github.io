@@ -24,12 +24,12 @@ function polyFillEncodedFrameMetadata(encodedFrame, controller) {
       return {
         // TODO: provide a more complete polyfill based on additionalData for video.
         synchronizationSource: this.synchronizationSource,
-        contributingSources: this.contributingSources
+        contributingSources: this.contributingSources,
+        myMetaData: currentMetaData
       };
     };
   }
   controller.enqueue(encodedFrame);
-  console.log(encodedFrame.data);
   //controller.enqueue(currentMetaData);
 }
 
@@ -60,15 +60,14 @@ function dump(encodedFrame, direction, max = 16) {
   for (let j = 0; j < data.length && j < max; j++) {
     bytes += (data[j] < 16 ? '0' : '') + data[j].toString(16) + ' ';
   }
-  /*console.log(performance.now().toFixed(2), direction, bytes.trim(),
+  console.log(performance.now().toFixed(2), direction, bytes.trim(),
       'len=' + encodedFrame.data.byteLength,
       'type=' + (encodedFrame.type || 'audio'),
       'ts=' + encodedFrame.timestamp,
       'ssrc=' + encodedFrame.getMetadata().synchronizationSource
-  );*/
-  
-  console.log(data.byteLength);
-  console.log(encodedFrame.data);
+  );
+
+  console.log(encodedFrame.getMetadata().currentMetaData);
 }
 
 let scount = 0;
