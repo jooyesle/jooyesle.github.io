@@ -1,5 +1,5 @@
-const encryptWorker = new Worker('./worker/encryption.js');
-const faceDetectionWorker = new Worker('./worker/faceDetection.js');
+const encryptWorker = new Worker('./workers/encryption.js');
+const faceDetectionWorker = new Worker('./workers/faceDetection.js');
 
 function handleEncryption(checkbox){
   if(checkbox.checked == true){
