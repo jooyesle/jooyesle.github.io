@@ -19,7 +19,7 @@ let currentMetaData = "snow";
 // The polyfill can not be done on the prototype since its not exposed in workers. Instead,
 // it is done as another transformation to keep it separate.
 function polyFillEncodedFrameMetadata(encodedFrame, controller) {
-  /*if (!encodedFrame.getMetadata) {
+  if (!encodedFrame.getMetadata) {
     encodedFrame.getMetadata = function() {
       return {
         // TODO: provide a more complete polyfill based on additionalData for video.
@@ -29,8 +29,8 @@ function polyFillEncodedFrameMetadata(encodedFrame, controller) {
     };
   }
   controller.enqueue(encodedFrame);
-  console.log(encodedFrame.data);*/
-  controller.enqueue(currentMetaData);
+  console.log(encodedFrame.data);
+  //controller.enqueue(currentMetaData);
 }
 
 let currentCryptoKey;
