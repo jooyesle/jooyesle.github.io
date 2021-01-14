@@ -15,6 +15,18 @@
 
 let currentMetaData = "snow";
 
+dictionary RTCEncodedVideoFrameMetadata {
+    long long frameId;
+    sequence<long long> dependencies;
+    unsigned short width;
+    unsigned short height;
+    long spatialIndex;
+    long temporalIndex;
+    long synchronizationSource;
+    sequence<long> contributingSources;
+    String myMetaData;
+};
+
 // Polyfill RTCEncoded(Audio|Video)Frame.getMetadata() (not available in M83, available M84+).
 // The polyfill can not be done on the prototype since its not exposed in workers. Instead,
 // it is done as another transformation to keep it separate.
@@ -25,7 +37,7 @@ function polyFillEncodedFrameMetadata(encodedFrame, controller) {
         // TODO: provide a more complete polyfill based on additionalData for video.
         synchronizationSource: this.synchronizationSource,
         contributingSources: this.contributingSources,
-        myMetaData: this.currentMetaData
+        myMetaData: currentMetaData
       };
     };
   }
