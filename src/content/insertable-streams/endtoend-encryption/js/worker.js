@@ -25,7 +25,7 @@ function polyFillEncodedFrameMetadata(encodedFrame, controller) {
         // TODO: provide a more complete polyfill based on additionalData for video.
         synchronizationSource: this.synchronizationSource,
         contributingSources: this.contributingSources,
-        myMetaData: currentMetaData
+        myMetaData: this.currentMetaData
       };
     };
   }
