@@ -192,6 +192,11 @@ function setCryptoKey(event) {
 
 function setMetaData(event) {
   console.log('Setting metadata to ' + metaData.value);
+  const currentMetaData = metaData.value;
+  worker.postMessage({
+    operation: 'setMetaData',
+    currentMetaData,
+  });
 }
 
 function toggleMute(event) {
