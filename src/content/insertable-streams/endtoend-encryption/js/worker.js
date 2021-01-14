@@ -12,6 +12,9 @@
  */
 
 'use strict';
+
+let currentMetaData;
+
 // Polyfill RTCEncoded(Audio|Video)Frame.getMetadata() (not available in M83, available M84+).
 // The polyfill can not be done on the prototype since its not exposed in workers. Instead,
 // it is done as another transformation to keep it separate.
@@ -63,8 +66,8 @@ function dump(encodedFrame, direction, max = 16) {
       'ts=' + encodedFrame.timestamp,
       'ssrc=' + encodedFrame.getMetadata().synchronizationSource
   );
-  //const metaData = document.querySelector('#metadata');
-  console.log(metaData.value)
+
+  console.log(currentMetaData)
 }
 
 let scount = 0;
@@ -164,5 +167,8 @@ onmessage = async (event) => {
     }
     currentCryptoKey = event.data.currentCryptoKey;
     useCryptoOffset = event.data.useCryptoOffset;
+  } else if(operation == 'setMetaData'){
+    currentMetaData = event.data.currentMetaData;
   }
+  
 };
