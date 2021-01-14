@@ -67,7 +67,7 @@ function dump(encodedFrame, direction, max = 16) {
       'ssrc=' + encodedFrame.getMetadata().synchronizationSource
   );
 
-  console.log(encodedFrame.getMetadata().currentMetaData);
+  console.log(encodedFrame.getMetadata().myMetaData);
 }
 
 let scount = 0;
