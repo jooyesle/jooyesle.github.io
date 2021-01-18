@@ -9,9 +9,9 @@ class MetaData {
 const form = document.getElementById('metadata_input');
 form.addEventListener('submit', onSubmit);
 
-int x_in = 1;
-int y_in = 2;
-int z_in = 3;
+let x_in = 1;
+let y_in = 2;
+let z_in = 3;
 function onSubmit(event){
         x_in = document.getElementById('x_in').value;
         y_in = document.getElementById('y_in').value;
@@ -121,7 +121,7 @@ function onInsertableMetadata(metadata) {
                     let myMetaDataStr = new TextDecoder("utf-8").decode(metadata);
                     console.log(myMetaDataStr);
                     let myMetaData = JSON.parse(myMetaDataStr);
-                    console.log('x : %d, y : %d, z : %d', myMetaData.x, myMetaData.y, myMetaData.z);
+                    console.log('x : %d, y : %d, z : %d', Number(myMetaData.x), Number(myMetaData.y), Number(myMetaData.z));
                     /*
                     const view = new DataView(metadata);
                     const x = view.getUint16(0);
