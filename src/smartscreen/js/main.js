@@ -93,11 +93,11 @@ function getMetadataFromChunk(chunk) {
 function getInsertableMetadata() {
         myMetaData = new MetaData(1000, 2000, 30);
         
-        console.log(JSON.stringify(myMetaData));
         let myMetaDataStr = JSON.stringify(myMetaData);
+        console.log(myMetaDataStr);
         
-        console.log(metadata);
         let metadata = Uint8Array.from(myMetaDataStr);
+        console.log(metadata);
         
         console.log(String.fromCharCode(metadata));
         /*
