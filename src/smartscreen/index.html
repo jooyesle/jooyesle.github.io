@@ -22,6 +22,26 @@
                 <br/>
                 <button onclick="startVideo()">Start Video</button>
                 <button onclick="stopVideo()">Stop Video</button>
+                <br/>
+                <h4> Input integer x, y and z and click Append in order to append to insertable stream.</h4>
+                <form>
+                    <div>
+                        <label for="x_in"> x : </label>
+                        <input type="number" min="0" step="1" name="x" id="x_in" placeholder="required" required>
+                    </div>
+                    <div>
+                        <label for="y_in"> y : </label>
+                        <input type="number" min="0" step="1" name="y" id="y_in" placeholder="required" required>
+                    </div>
+                    <div>
+                        <label for="z_in"> z : </label>
+                        <input type="number"  min="0" step="1" name="z" id="z_in" placeholder="required" required>
+                    </div>
+                    <div>
+                        <input type="submit" value="Append to Insertable Stream">
+                    </div>
+                </form>
+                
             </div>
             <div class="remote">
                 <div>Remote</div>
@@ -29,7 +49,27 @@
                 <br/>
                 <button onclick="connect()">Connect</button>
                 <button onclick="disconnect()">Disconnect</button>
+                <h4> The received x, y, and z values are displayed below. </h4>
+                <form>
+                    <div>
+                        <label for="x_out"> x : </label>
+                        <input type="number" min="0" step="1" name="x" id="x_out" readonly>
+                    </div>
+                    <div>
+                        <label for="y_in"> y : </label>
+                        <input type="number" min="0" step="1" name="y" id="y_out" readonly>
+                    </div>
+                    <div>
+                        <label for="z_in"> z : </label>
+                        <input type="number" min="0" step="1" name="z" id="z_out" readonly>
+                    </div>
+                    <div>
+                        (These values are readonly values.)
+                    </div>
+                
+                </form>
             </div>
+            
         </div><br/>
         <div class="logs" id="logbox"></div>
         
