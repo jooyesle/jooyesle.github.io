@@ -9,11 +9,13 @@ class MetaData {
 const form = document.getElementById('metadata_input');
 form.addEventListener('submit', onSubmit);
 
+let x_in = 1;
+let y_in = 2;
+let z_in = 3;
 function onSubmit(event){
-        console.log(document.getElementById('x_in'));
-        console.log(document.getElementById('y_in'));
-        console.log(document.getElementById('z_in'));
-        return false; // do not refresh
+        x_in = document.getElementById('x_in').value;
+        y_in = document.getElementById('y_in').value;
+        z_in = document.getElementById('z_in').value;
 }
 
 let localStream = null;
@@ -101,7 +103,7 @@ function getMetadataFromChunk(chunk) {
 }
 
 function getInsertableMetadata() {
-        myMetaData = new MetaData(1000, 2000, 30);
+        myMetaData = new MetaData(x_in, y_in, z_in);
         let myMetaDataStr = JSON.stringify(myMetaData);
         //console.log(myMetaDataStr);
         let metadata = new TextEncoder("utf-8").encode(myMetaDataStr);
