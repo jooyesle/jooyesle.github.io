@@ -6,6 +6,15 @@ class MetaData {
         }
 }
 
+const form = document.getElementById('metadata_input');
+form.addEventListener('submit', onSubmit);
+
+function onSubmit(event){
+        console.log(document.getElementById('x_in'));
+        console.log(document.getElementById('y_in'));
+        console.log(document.getElementById('z_in'));
+}
+
 let localStream = null;
 const localVideo = document.getElementById('local_video');
 const remoteVideo = document.getElementById('remote_video');
