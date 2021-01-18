@@ -111,7 +111,7 @@ function onInsertableMetadata(metadata) {
         try {
                     let myMetaDataStr = new TextDecoder("utf-8").decode(metadata);
                     console.log(myMetaDataStr);
-                    MetaData myMetaData = JSON.parse(myMetaDataStr);
+                    myMetaData = Object.assign(new MetaData, myMetaDataStr);
                     console.log('x : %d, y : %d, z : %d', myMetaData.x, myMetaData.y, myMetaData.z);
                     /*
                     const view = new DataView(metadata);
