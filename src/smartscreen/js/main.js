@@ -95,7 +95,7 @@ function getInsertableMetadata() {
         console.log(JSON.stringify(myMetaData));
         let myMetaDataStr = JSON.stringify(myMetaData);
         console.log(new TextEncoder().encode(myMetaDataStr).byteLength);
-        let metaData = new Uint8Array(myMetaDataStr);
+        let metadata = new Uint8Array(myMetaDataStr);
         /*
         let metadata = new ArrayBuffer (5);
         const view = new DataView(metadata)
