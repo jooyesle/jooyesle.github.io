@@ -94,12 +94,12 @@ function getInsertableMetadata() {
         myMetaData = new MetaData(1000, 2000, 30);
         
         let myMetaDataStr = JSON.stringify(myMetaData);
-        console.log(myMetaDataStr);
+        //console.log(myMetaDataStr);
         
         let metadata = new TextEncoder("utf-8").encode(myMetaDataStr);
-        console.log(metadata);
+        //console.log(metadata);
         
-        console.log(new TextDecoder("utf-8").decode(metadata));
+        //console.log(new TextDecoder("utf-8").decode(metadata));
         /*
         let metadata = new ArrayBuffer (5);
         const view = new DataView(metadata)
@@ -112,7 +112,8 @@ function getInsertableMetadata() {
 
 function onInsertableMetadata(metadata) {
         try {
-                    //console.log(String.fromCharCode(metadata));
+                    let myMetaDataStr = JSON.parse(metadata);
+                    console.log(new TextDecoder("utf-8").decode(myMetaDataStr));
                     /*
                     const view = new DataView(metadata);
                     const x = view.getUint16(0);
