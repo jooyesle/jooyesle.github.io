@@ -108,9 +108,7 @@ function getInsertableMetadata() {
 
 function onInsertableMetadata(metadata) {
         try {
-                    let myMetaData = JSON.parse(metadata);
-                    console.log(myMetaData);
-                    //console.log('x : %d, y : %d, z : %d', metadata.x, metadata.y, metadata.z);
+                    console.log(String.fromCharCode(metadata));
                     /*
                     const view = new DataView(metadata);
                     const x = view.getUint16(0);
