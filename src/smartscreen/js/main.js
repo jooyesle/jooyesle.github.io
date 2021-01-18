@@ -83,6 +83,11 @@ function getMetadataFromChunk(chunk) {
 }
 
 function getInsertableMetadata() {
+        myMetaData = new MetaData(1000, 2000, 30);
+        console.log(JSON.stringify(myMetaData));
+        let myMetaDataStr = JSON.stringify(myMetaData);
+        console.log(new TextEncoder().encode(myMetaDataStr).byteLength);
+        
         let metadata = new ArrayBuffer (5);
         const view = new DataView(metadata)
         view.setUint16 (0, 1000);
