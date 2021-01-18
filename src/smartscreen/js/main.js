@@ -13,6 +13,7 @@ function onSubmit(event){
         console.log(document.getElementById('x_in'));
         console.log(document.getElementById('y_in'));
         console.log(document.getElementById('z_in'));
+        return false; // do not refresh
 }
 
 let localStream = null;
