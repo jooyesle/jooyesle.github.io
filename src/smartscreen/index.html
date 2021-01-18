@@ -24,7 +24,7 @@
                 <button onclick="stopVideo()">Stop Video</button>
                 <br/>
                 <h4> Input integer x, y and z and click Append in order to append to insertable stream.</h4>
-                <form id="metadata_input">
+                <form id="metadata_input" onsubmit="return false">
                     <div>
                         <label for="x_in"> x : </label>
                         <input type="number" min="0" step="1" name="x" id="x_in" placeholder="required" required>
