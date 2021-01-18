@@ -9,9 +9,9 @@ class MetaData {
 const form = document.getElementById('metadata_input');
 form.addEventListener('submit', onSubmit);
 
-let x_in = 1;
-let y_in = 2;
-let z_in = 3;
+int x_in = 1;
+int y_in = 2;
+int z_in = 3;
 function onSubmit(event){
         x_in = document.getElementById('x_in').value;
         y_in = document.getElementById('y_in').value;
@@ -105,10 +105,7 @@ function getMetadataFromChunk(chunk) {
 function getInsertableMetadata() {
         myMetaData = new MetaData(x_in, y_in, z_in);
         let myMetaDataStr = JSON.stringify(myMetaData);
-        //console.log(myMetaDataStr);
         let metadata = new TextEncoder("utf-8").encode(myMetaDataStr);
-        //console.log(metadata);
-
         /*
         let metadata = new ArrayBuffer (5);
         const view = new DataView(metadata)
