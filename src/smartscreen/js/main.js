@@ -1,3 +1,11 @@
+class MetaData {
+        constructor(x, y, z){
+                this.x = x;
+                this.y = y;
+                this.z = z;
+        }
+}
+
 let localStream = null;
 const localVideo = document.getElementById('local_video');
 const remoteVideo = document.getElementById('remote_video');
