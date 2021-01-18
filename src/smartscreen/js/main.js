@@ -95,23 +95,28 @@ function getInsertableMetadata() {
         console.log(JSON.stringify(myMetaData));
         let myMetaDataStr = JSON.stringify(myMetaData);
         console.log(new TextEncoder().encode(myMetaDataStr).byteLength);
-        
+        let metaData = new Uint8Array(myMetaDataStr);
+        /*
         let metadata = new ArrayBuffer (5);
         const view = new DataView(metadata)
         view.setUint16 (0, 1000);
         view.setUint16 (2, 2000);
         view.setUint8 (4, 30);
-
+        */
         return metadata;
 }
 
 function onInsertableMetadata(metadata) {
         try {
+                    let myMetaData = JSON.parse(metadata);
+                    console.log('x : %d, y : %d, z : %d', myMetaData.x, myMetaData.y, myMetaData.z);
+                    /*
                     const view = new DataView(metadata);
                     const x = view.getUint16(0);
                     const y = view.getUint16(2);
                     const z = view.getUint8(4);
                     console.log('x : %d, y : %d, z : %d', x, y, z);
+                    */
                 } catch(e) {
                             console.error(e);
                         }
