@@ -17,13 +17,18 @@ Promise.all([
   faceapi.nets.faceExpressionNet.loadFromUri('/src/smartscreen/js/face-api/models')
 ]).then(startVideo)
 
-localVideo.addEventListener("play", () => {
+localVideo.addEventListener("playing", () => {
+  const canvas = faceapi.createCanvasFromMedia(localVideo);
+  document.body.append(canvas);
+  const displaySize = { width: localVideo.width, height: localVideo.height}
   setInterval(async () => {
     const detections = await faceapi
       .detectAllFaces(localVideo, new faceapi.TinyFaceDetectorOptions())
       .withFaceLandmarks()
       .withFaceExpressions();
-    console.log(detections);
+    //console.log(detections);
+    const resizeDetections = faceapi.resizeResults(detections, displaySize);
+    faceapi.draw.drawDetections(canvas, resizedDetections);
   }, 100);
 });
 
