@@ -18,7 +18,10 @@
         <div class="screen">
             <div class="local">
                 <div>Local</div>
-                <video id="local_video" width="320" height="240" style="border: solid 1px black;"></video>
+		
+                <canvas> 
+			<video id="local_video" width="320" height="240" style="border: solid 1px black;"></video>
+		</canvas>
                 <br/>
                 <button onclick="startVideo()">Start Video</button>
                 <button onclick="stopVideo()">Stop Video</button>
