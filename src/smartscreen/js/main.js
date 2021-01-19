@@ -27,7 +27,7 @@ localVideo.addEventListener("playing", () => {
       .withFaceLandmarks()
       .withFaceExpressions();
     //console.log(detections);
-    const resizeDetections = faceapi.resizeResults(detections, displaySize);
+    const resizedDetections = faceapi.resizeResults(detections, displaySize);
     faceapi.draw.drawDetections(canvas, resizedDetections);
   }, 100);
 });
