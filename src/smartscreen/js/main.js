@@ -10,11 +10,11 @@ let localStream = null;
 const localVideo = document.getElementById("local_video");
 const remoteVideo = document.getElementById("remote_video");
 
-Promise.all([
+/*Promise.all([
   faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
   faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
   faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
-  faceapi.nets.faceExperssionNet.loadFromUri("/models"),
+  faceapi.nets.faceExperssionNet.loadFromUri("/models")
 ]).then(startVideo);
 
 localVideo.addEventListener("play", () => {
@@ -26,7 +26,7 @@ localVideo.addEventListener("play", () => {
     console.log(detections);
   }, 100);
 });
-
+*/
 const form = document.getElementById("metadata_input");
 form.addEventListener("submit", onSubmit);
 
