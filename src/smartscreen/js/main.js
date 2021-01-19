@@ -11,7 +11,7 @@ const localVideo = document.getElementById("local_video");
 const remoteVideo = document.getElementById("remote_video");
 
 Promise.all([
-  faceapi.nets.tinyFaceDetector.loadFromUri('face-api/models')//,
+  faceapi.nets.tinyFaceDetector.loadFromUri('/src/smart/screen/js/face-api/models')//,
   //faceapi.nets.faceLandmark68Net.loadFromUri('face-api/models'),
   //faceapi.nets.faceRecognitionNet.loadFromUri('face-api/models'),
   //faceapi.nets.faceExpressionNet.loadFromUri('face-api/models')
