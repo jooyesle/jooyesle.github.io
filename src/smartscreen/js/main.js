@@ -11,12 +11,12 @@ const localVideo = document.getElementById("local_video");
 const remoteVideo = document.getElementById("remote_video");
 
 Promise.all([
-  faceapi.nets.tinyFaceDetector.loadFromUri('/src/smartscreen/js/face-api/models')//,
-  //faceapi.nets.faceLandmark68Net.loadFromUri('face-api/models'),
-  //faceapi.nets.faceRecognitionNet.loadFromUri('face-api/models'),
-  //faceapi.nets.faceExpressionNet.loadFromUri('face-api/models')
+  faceapi.nets.tinyFaceDetector.loadFromUri('/src/smartscreen/js/face-api/models'),
+  faceapi.nets.faceLandmark68Net.loadFromUri('/src/smartscreen/js/face-api/models'),
+  faceapi.nets.faceRecognitionNet.loadFromUri('/src/smartscreen/js/face-api/models'),
+  faceapi.nets.faceExpressionNet.loadFromUri('/src/smartscreen/js/face-api/models')
 ]).then(startVideo)
-/*
+
 localVideo.addEventListener("play", () => {
   setInterval(async () => {
     const detections = await faceapi
@@ -26,7 +26,7 @@ localVideo.addEventListener("play", () => {
     console.log(detections);
   }, 100);
 });
-*/
+
 const form = document.getElementById("metadata_input");
 form.addEventListener("submit", onSubmit);
 
