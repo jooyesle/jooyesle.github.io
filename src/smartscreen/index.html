@@ -1,97 +1,117 @@
 <!DOCTYPE html>
 <html>
-    <head>
-    </head>
-
-    <body>
-        <style type="text/css" media="screen">
+<head>
+</head>
+<html>
+<body>
+<style type="text/css" media="screen">
 .title {width:700px; height:25px; font-weight:bold }
-.screen > * {
-    display:inline-block;
-    position:relative;
+.local {width:350px;}
+.remote {width:350px;}
+.logs {background-color: #f1f1f1; width:700px; height:300px; border:solid 1px black;padding: 5px;}
+.screen { display: flex;}
+.screen > div { 
+  display:inline-block;
+  font-weight:bold;
 }
-.local {width:350px; height:300px; position:relative;}
-.remote {width:350px; height:300px;}
-.logs {width:700px; height:300px; border:solid 1px black}
-body{
-     width: 100vw;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      position:relative;
-}
+.ui { background-color: #ffffff; width:700px; border:solid 1px black; padding: 5px;}
+.ui_title { display: flex; font-weight:bold}
+.ui_body { display: flex;}
+.ui_body > div { display:inline-block;}
+.seperator {background-color: #ffffff;}
+</style>
 
-canvas{
-    position:absolute;
-    top:65px;
-}
+<div class="title">Advanced Prototype App for SmartScreen</div><br/>
 
-        </style>
-        <div class="title">Advanced Prototype App for SmartScreen</div><br/>
-        <div class="screen">
-            <div class="local">
-                <div>Local</div>
-		<canvas> </canvas>
-                <video id="local_video" width="320" height="240" style="border: solid 1px black;"></video>
-                
-                <br/>
-                <button onclick="startVideo()">Start Video</button>
-                <button onclick="stopVideo()">Stop Video</button>
-                <br/>
-                <h4> Input integer x, y and z and click Append in order to append to insertable stream.</h4>
-                <form id="metadata_input" onsubmit="return false">
-                    <div>
-                        <label for="x_in"> x : </label>
-                        <input type="number" value="1" min="0" step="1" name="x" id="x_in" placeholder="required" required>
-                    </div>
-                    <div>
-                        <label for="y_in"> y : </label>
-                        <input type="number" value="2" min="0" step="1" name="y" id="y_in" placeholder="required" required>
-                    </div>
-                    <div>
-                        <label for="z_in"> z : </label>
-                        <input type="number" value="3" min="0" step="1" name="z" id="z_in" placeholder="required" required>
-                    </div>
-                    <div>
-                        <input type="submit" value="Append to Insertable Stream">
-                    </div>
-                </form>
-                
-            </div>
-            <div class="remote">
-                <div>Remote</div>
-                <video id="remote_video" width="320" height="240" controls="1" style="border: solid 1px black;"></video>
-                <br/>
-                <button onclick="connect()">Connect</button>
-                <button onclick="disconnect()">Disconnect</button>
-                <h4> The received x, y, and z values are displayed below. </h4>
-                <form>
-                    <div>
-                        <label for="x_out"> x : </label>
-                        <input type="number" min="0" step="1" name="x" id="x_out" readonly>
-                    </div>
-                    <div>
-                        <label for="y_out"> y : </label>
-                        <input type="number" min="0" step="1" name="y" id="y_out" readonly>
-                    </div>
-                    <div>
-                        <label for="z_out"> z : </label>
-                        <input type="number" min="0" step="1" name="z" id="z_out" readonly>
-                    </div>
-                    <div>
-                        (These values are readonly values.)
-                    </div>
-                
-                </form>
-            </div>
-            
-        </div><br/>
-        <div class="logs" id="logbox"></div>
-        
-        <script src="js/insertableStream.js"></script>	
-    	<label><input type="checkbox" onchange='handleEncryption(this);' name="func" value="Encryption"> Enable Encryption</label> <br>
-		<label><input type="checkbox" onchange='handleFaceDetection(this);'name="func" value="Face Detection"> Enable Face Detection</label>
-    </body>
+<!-- screen -->
+<div class="screen">
+    <div class="local">
+        <div>Local</div>
+        <video id="local_video" width="320" height="240" style="border: solid 1px black;"></video>
+        <br/>
+        <button onclick="startVideo()">Start Video</button>
+        <button onclick="stopVideo()">Stop Video</button>
+        <br/>
+    </div>
+    <div class="remote">
+        <div>Remote</div>
+        <video id="remote_video" width="320" height="240" controls="1" style="border: solid 1px black;"></video>
+        <br/>
+        <button onclick="connect()">Connect</button>
+        <button onclick="disconnect()">Disconnect</button>                
+    </div>
+</div>
+<br><br>
+
+<!-- insertable stream test ui -->
+<div class="ui">
+    <div class="ui_title">Insertable Stream Test</div>
+    <div class="ui_body">
+    <div class="local">
+    Input integer x, y and z and click Append in order to append to insertable stream.
+    <form id="metadata_input" onsubmit="return false">
+        <div>
+            <label for="x_in"> x : </label>
+            <input type="number" value="1" min="0" step="1" name="x" id="x_in" placeholder="required" required>
+        </div>
+        <div>
+            <label for="y_in"> y : </label>
+            <input type="number" value="2" min="0" step="1" name="y" id="y_in" placeholder="required" required>
+        </div>
+        <div>
+            <label for="z_in"> z : </label>
+            <input type="number" value="3" min="0" step="1" name="z" id="z_in" placeholder="required" required>
+        </div>
+        <div>
+            <input type="submit" value="Append to Insertable Stream">
+        </div>
+    </form>
+    </div>
+    <div class="remote">
+    The received x, y, and z values are displayed below.
+    <form>
+        <div>
+            <label for="x_out"> x : </label>
+            <input type="number" min="0" step="1" name="x" id="x_out" readonly>
+        </div>
+        <div>
+            <label for="y_out"> y : </label>
+            <input type="number" min="0" step="1" name="y" id="y_out" readonly>
+        </div>
+        <div>
+            <label for="z_out"> z : </label>
+            <input type="number" min="0" step="1" name="z" id="z_out" readonly>
+        </div>
+        <div>
+            (These values are readonly values.)
+        </div>
+    
+    </form>
+    </div>
+    </div>
+</div>
+<div class="seperator"><br></div>
+
+<!-- encryption ui -->
+<div class="ui">
+    <div class="ui_title">Encryption Test</div>
+    <div class="ui_body">
+        <div class="local">
+            <label><input type="checkbox" onchange='handleEncryptVideo(this);' name="func" value="Encryption"> Enable Encrypt Video</label><br>
+            <label><input type="checkbox" onchange='handleEncryptAudio(this);' name="func" value="Encryption"> Enable Encrypt Audio</label><br>
+        </div>
+        <div class="remote">
+            <label><input type="checkbox" onchange='handleDecryptVideo(this);' name="func" value="Decryption"> Enable Decrypt Video</label><br>
+            <label><input type="checkbox" onchange='handleDecryptAudio(this);' name="func" value="Decryption"> Enable Decrypt Audio</label><br><br>
+        </div>
+    </div>
+</div>
+<div class="seperator"><br></div>
+
+<!-- logbox -->
+<div class="logs" id="logbox"></div>
 </html>
-<script defer src="js/face-api/face-api.min.js" type="text/javascript"></script>
-<script defer src="js/main.js" type="text/javascript"></script>
+<script src="js/insertableStream.js" type="text/javascript"></script>
+<script src="js/encryptionFunction.js" type="text/javascript"></script>
+<script src="js/metadataFunction.js" type="text/javascript"></script>
+<script src="js/main.js" type="text/javascript"></script>
