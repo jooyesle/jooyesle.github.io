@@ -1,5 +1,3 @@
-const localVideo = document.getElementById("local_video");
-
 Promise.all([
   faceapi.nets.tinyFaceDetector.loadFromUri(
     "/src/smartscreen/js/face-api/models"
