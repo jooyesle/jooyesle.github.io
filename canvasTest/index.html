@@ -4,39 +4,56 @@
 <head>
     <meta charset="utf-8" />
     <title>Canvas tutorial</title>
-    <script type="text/javascript">
-        function draw() {
-            //var canvas = document.getElementById('tutorial');
-            let canvas = document.createElement('canvas');
-            canvas.id = "smile";
-            canvas.width = 150;
-            canvas.height = 150;
-            if (canvas.getContext) {
-                let ctx = canvas.getContext('2d');
-                
-                ctx.beginPath();
-                ctx.arc(75, 75, 50, 0, Math.PI * 2, true); // Outer circle
-                ctx.moveTo(110, 75);
-                ctx.arc(75, 75, 35, 0, Math.PI, false);  // Mouth (clockwise)
-                ctx.moveTo(65, 65);
-                ctx.arc(60, 65, 5, 0, Math.PI * 2, true);  // Left eye
-                ctx.moveTo(95, 65);
-                ctx.arc(90, 65, 5, 0, Math.PI * 2, true);  // Right eye
-                ctx.stroke();
-            }
-            let body = document.getElementsByTagName("body")[0];
-            body.appendChild(canvas);
-        }
-    </script>
+    
     <style type="text/css">
+    body{
+        position:relative;
+    }
         canvas {
+            position:relative;
+            left: -250px;
+            bottom: 50px;
             border: 1px solid black;
         }
     </style>
 </head>
 
 <body onload="draw();">
-    <canvas id="tutorial" width="150" height="150"></canvas>
+    <video id="video" width="320" height="240" controls="1" style="border: solid 1px black;" autoplay="true"></video>
 </body>
+<script type="text/javascript">
+    var video = document.querySelector("video");
 
+    if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                video.srcObject = stream;
+            })
+            .catch(function (err0r) {
+                console.log("Something went wrong!");
+            });
+    }
+    function draw() {
+        //var canvas = document.getElementById('tutorial');
+        let canvas = document.createElement('canvas');
+        canvas.id = "smile";
+        canvas.width = 150;
+        canvas.height = 150;
+        if (canvas.getContext) {
+            let ctx = canvas.getContext('2d');
+
+            ctx.beginPath();
+            ctx.arc(75, 75, 50, 0, Math.PI * 2, true); // Outer circle
+            ctx.moveTo(110, 75);
+            ctx.arc(75, 75, 35, 0, Math.PI, false);  // Mouth (clockwise)
+            ctx.moveTo(65, 65);
+            ctx.arc(60, 65, 5, 0, Math.PI * 2, true);  // Left eye
+            ctx.moveTo(95, 65);
+            ctx.arc(90, 65, 5, 0, Math.PI * 2, true);  // Right eye
+            ctx.stroke();
+        }
+        let body = document.getElementsByTagName("body")[0];
+        body.appendChild(canvas);
+    }
+</script>
 </html>
