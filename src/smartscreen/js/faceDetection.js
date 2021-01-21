@@ -20,7 +20,7 @@ let interval = -1;
 
 localVideo.onplaying = () => {
   faceDetection.disabled = false;
-  setFaceDetectionInterval.disabled = true;
+  setFaceDetectionInterval.disabled = false;
 };
 
 let canvas = new Object();
@@ -28,6 +28,7 @@ let canvas = new Object();
 function handleEnableFaceDetection(checkbox) {
   console.log("enableFaceDetection: " + checkbox.checked);
   if (checkbox.checked) {
+    setFaceDetectionInterval.disabled = true;
     canvas = faceapi.createCanvasFromMedia(localVideo);
     document.body.append(canvas);
     const displaySize = {
@@ -47,6 +48,7 @@ function handleEnableFaceDetection(checkbox) {
       faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
     }, setFaceDetectionInterval.value);
   } else {
+    setFaceDetectionInterval.disabled = false;
     if (interval >= 0) {
       canvas.width = 0;
       clearInterval(interval);
@@ -59,7 +61,7 @@ function resetFaceDetection() {
     canvas.width = 0;
     clearInterval(interval);
   }
+  setFaceDetectionInterval.disabled = true;
   faceDetection.checked = false;
   faceDetection.disabled = true;
-  setFaceDetectionInterval.disabled = false;
 }
