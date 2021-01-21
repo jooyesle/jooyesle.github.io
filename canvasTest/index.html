@@ -8,6 +8,9 @@
         function draw() {
             //var canvas = document.getElementById('tutorial');
             let canvas = document.createElement('canvas');
+            canvas.id = "smile";
+            canvas.width = 150;
+            canvas.height = 150;
             if (canvas.getContext) {
                 let ctx = canvas.getContext('2d');
                 
@@ -21,6 +24,8 @@
                 ctx.arc(90, 65, 5, 0, Math.PI * 2, true);  // Right eye
                 ctx.stroke();
             }
+            let body = document.getElementsByTagName("body")[0];
+            body.appendChild(canvas);
         }
     </script>
     <style type="text/css">
