@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Canvas tutorial</title>
+    
+    <style type="text/css">
+    body{
+        position:relative;
+    }
+        canvas {
+            position:relative;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <video id="video" width="640" height="480" controls="1" style="border: solid 1px black;" autoplay="true"></video>
+    <canvas id="BackgroundErase" width="640" height="480"> </canvas>
+</body>
+<!-- Person Segmentation -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@1.0.0"></script>
+<script src="personSegmentation.js" type="module"></script>
+</html>
