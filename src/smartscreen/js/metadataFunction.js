@@ -20,13 +20,16 @@ class MetaData {
 }
 
 var gmetadata = null;
+
+let a_in = 0;
+let b_in = 0;
+let c_in = 0;
 let gface = new Face(0, 0, 0, 0);
 
 function onSubmit(event) {
-  let a_in = document.getElementById("a_in").value;
-  let b_in = document.getElementById("b_in").value;
-  let c_in = document.getElementById("c_in").value;
-  console.log(gface.x + " " + gface.y + " " + gface.w + " " + gface.h);
+  a_in = document.getElementById("a_in").value;
+  b_in = document.getElementById("b_in").value;
+  c_in = document.getElementById("c_in").value;
   myMetaData = new MetaData(a_in, b_in, c_in, gface);
   let myMetaDataStr = JSON.stringify(myMetaData);
   let metadata = new TextEncoder("utf-8").encode(myMetaDataStr);
@@ -67,9 +70,8 @@ function onInsertableMetadata(metadata) {
   }
   try {
     let myMetaDataStr = new TextDecoder("utf-8").decode(metadata);
-    //console.log(myMetaDataStr);
     let myMetaData = JSON.parse(myMetaDataStr);
-    console.log(
+    /*console.log(
       "a : %d, b : %d, c : %d",
       Number(myMetaData.a),
       Number(myMetaData.b),
@@ -81,7 +83,36 @@ function onInsertableMetadata(metadata) {
       Number(myMetaData.face.y),
       Number(myMetaData.face.w),
       Number(myMetaData.face.h)
+    );*/
+    let remoteCanvas = document.getElementById("remote_canvas");
+    let ctx = remoteCanvas.getContext("2d");
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "rgb(255, 102, 0)";
+    ctx.clearRect(0, 0, remoteCanvas.width, remoteCanvas.height);
+    rFace = new Face(
+      Number(myMetaData.face.x),
+      Number(myMetaData.face.y),
+      Number(myMetaData.face.w),
+      Number(myMetaData.face.h)
     );
+    /*ctx.strokeRect(
+      Number(myMetaData.face.x),
+      Number(myMetaData.face.y),
+      Number(myMetaData.face.w),
+      Number(myMetaData.face.h)
+    );*/
+    ctx.beginPath();
+    ctx.ellipse(
+      rFace.x + rFace.w / 2,
+      rFace.y + rFace.h / 2,
+      rFace.w / 2,
+      rFace.h / 2,
+      0,
+      0,
+      2 * Math.PI
+    );
+    ctx.stroke();
+    ctx.closePath();
     updateData(myMetaData);
   } catch (e) {
     console.error(e);

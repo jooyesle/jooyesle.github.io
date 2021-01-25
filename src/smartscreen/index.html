@@ -6,29 +6,29 @@
 <body>
 <style type="text/css" media="screen">
 .title {width:700px; height:25px; font-weight:bold }
+.screen { display: flex; position:relative;}
+.screen > div { 
+  font-weight:bold;
+  position:relative;
+}
 .local {width:350px;}
 .remote {width:350px;}
 .logs {background-color: #f1f1f1; width:700px; height:300px; border:solid 1px black;padding: 5px;}
-.screen { display: flex;}
-.screen > div { 
-  display:inline-block;
-  font-weight:bold;
-}
 .ui { background-color: #ffffff; width:700px; border:solid 1px black; padding: 5px;}
 .ui_title { display: flex; font-weight:bold}
 .ui_body { display: flex;}
 .ui_body > div { display:inline-block;}
 .seperator {background-color: #ffffff;}
 body{
-     width: 100vw;
+      width: 100vw;
       height: 100vh;
       display: flex;
       flex-direction: column;
-      position:relative;
 }
 canvas{
     position:absolute;
-    top:65px;
+    top:21px;
+    left:0px;
 }
 </style>
 
@@ -39,6 +39,7 @@ canvas{
     <div class="local">
         <div>Local</div>
         <video id="local_video" width="320" height="240" style="border: solid 1px black;"></video>
+        <canvas id="local_canvas" width="320" height="240" style="border: solid 1px black;"></canvas>
         <br/>
         <button onclick="startVideo()">Start Video</button>
         <button onclick="stopVideo();resetFaceDetection()">Stop Video</button>
@@ -47,6 +48,7 @@ canvas{
     <div class="remote">
         <div>Remote</div>
         <video id="remote_video" width="320" height="240" controls="1" style="border: solid 1px black;"></video>
+        <canvas id="remote_canvas" width="320" height="240"style="border: solid 1px black;"></canvas>
         <br/>
         <button onclick="connect()">Connect</button>
         <button onclick="disconnect()">Disconnect</button>                
