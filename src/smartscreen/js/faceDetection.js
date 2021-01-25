@@ -37,24 +37,29 @@ function handleEnableFaceDetection(checkbox) {
     };
     faceapi.matchDimensions(canvas, displaySize);
     interval = setInterval(async () => {
-      const face = await faceapi
+      const singleResult = await faceapi
         .detectSingleFace(localVideo, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks()
         .withFaceExpressions();
-      if (face) {
-        gface.x = parseInt(face.detection.box.x);
-        gface.y = parseInt(face.detection.box.y);
-        gface.w = parseInt(face.detection.box.width);
-        gface.h = parseInt(face.detection.box.height);
+
+      if (singleResult) {
+        const resizedDetections = faceapi.resizeResults(
+          singleResult,
+          displaySize
+        );
+        canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+        faceapi.draw.drawDetections(canvas, resizedDetections);
+        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+        faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
+
+        gface.x = parseInt(singleResult.detection._box._x);
+        gface.y = parseInt(singleResult.detection._box._y);
+        gface.w = parseInt(singleResult.detection._box._width);
+        gface.h = parseInt(singleResult.detection._box._height);
       } else {
-        gface.width = 0;
-        gface.height = 0;
+        gface.w = 0;
+        gface.h = 0;
       }
-      const resizedDetections = faceapi.resizeResults(face, displaySize);
-      canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
-      faceapi.draw.drawDetections(canvas, resizedDetections);
-      faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
-      faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
     }, setFaceDetectionInterval.value);
   } else {
     setFaceDetectionInterval.disabled = false;
