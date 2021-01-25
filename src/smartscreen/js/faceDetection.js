@@ -37,11 +37,20 @@ function handleEnableFaceDetection(checkbox) {
     };
     faceapi.matchDimensions(canvas, displaySize);
     interval = setInterval(async () => {
-      const detections = await faceapi
-        .detectAllFaces(localVideo, new faceapi.TinyFaceDetectorOptions())
+      const face = await faceapi
+        .detectSingleFace(localVideo, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks()
         .withFaceExpressions();
-      const resizedDetections = faceapi.resizeResults(detections, displaySize);
+      if (face) {
+        gface.x = parseInt(face.detection.box.x);
+        gface.y = parseInt(face.detection.box.y);
+        gface.w = parseInt(face.detection.box.width);
+        gface.h = parseInt(face.detection.box.height);
+      } else {
+        gface.width = 0;
+        gface.height = 0;
+      }
+      const resizedDetections = faceapi.resizeResults(face, displaySize);
       canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
       faceapi.draw.drawDetections(canvas, resizedDetections);
       faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);

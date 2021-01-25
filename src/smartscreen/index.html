@@ -59,19 +59,19 @@ canvas{
     <div class="ui_title">Insertable Stream Test</div>
     <div class="ui_body">
     <div class="local">
-    Input integer x, y and z and click Append in order to append to insertable stream.
+    Input integer a, b and c and click Append in order to append to insertable stream.
     <form id="metadata_input" onsubmit="return false">
         <div>
-            <label for="x_in"> x : </label>
-            <input type="number" value="1" min="0" step="1" name="x" id="x_in" placeholder="required" required>
+            <label for="a_in"> a : </label>
+            <input type="number" value="1" min="0" step="1" name="a" id="a_in" placeholder="required" required>
         </div>
         <div>
-            <label for="y_in"> y : </label>
-            <input type="number" value="2" min="0" step="1" name="y" id="y_in" placeholder="required" required>
+            <label for="b_in"> b : </label>
+            <input type="number" value="2" min="0" step="1" name="b" id="b_in" placeholder="required" required>
         </div>
         <div>
-            <label for="z_in"> z : </label>
-            <input type="number" value="3" min="0" step="1" name="z" id="z_in" placeholder="required" required>
+            <label for="c_in"> c : </label>
+            <input type="number" value="3" min="0" step="1" name="c" id="c_in" placeholder="required" required>
         </div>
         <div>
             <input type="submit" value="Append to Insertable Stream">
@@ -79,19 +79,19 @@ canvas{
     </form>
     </div>
     <div class="remote">
-    The received x, y, and z values are displayed below.
+    The received a, b, and c values are displayed below.
     <form>
         <div>
-            <label for="x_out"> x : </label>
-            <input type="number" min="0" step="1" name="x" id="x_out" readonly>
+            <label for="a_out"> a : </label>
+            <input type="number" min="0" step="1" name="a" id="a_out" readonly>
         </div>
         <div>
-            <label for="y_out"> y : </label>
-            <input type="number" min="0" step="1" name="y" id="y_out" readonly>
+            <label for="b_out"> b : </label>
+            <input type="number" min="0" step="1" name="b" id="b_out" readonly>
         </div>
         <div>
-            <label for="z_out"> z : </label>
-            <input type="number" min="0" step="1" name="z" id="z_out" readonly>
+            <label for="c_out"> c : </label>
+            <input type="number" min="0" step="1" name="c" id="c_out" readonly>
         </div>
         <div>
             (These values are readonly values.)
@@ -141,7 +141,3 @@ canvas{
 <!--Face Detection-->
 <script src="js/face-api/face-api.min.js" type="text/javascript"></script>
 <script src="js/faceDetection.js" type="text/javascript"></script>
-<!-- Person Segmentation 
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@1.0.0"></script>
-<script src="js/personSegmentation.js" type="module"></script> -->

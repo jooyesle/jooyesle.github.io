@@ -1,55 +1,61 @@
 const form = document.getElementById("metadata_input");
 form.addEventListener("submit", onSubmit);
 
-class MetaData {
-  constructor(x, y, z) {
+class Face {
+  constructor(x, y, w, h) {
     this.x = x;
     this.y = y;
-    this.z = z;
+    this.w = w;
+    this.h = h;
   }
 }
 
-let x_in = 1;
-let y_in = 2;
-let z_in = 3;
+class MetaData {
+  constructor(a, b, c, face) {
+    this.a = a;
+    this.b = b;
+    this.c = c;
+    this.face = face;
+  }
+}
+
 var gmetadata = null;
+let gface = new Face(0, 0, 0, 0);
 
 function onSubmit(event) {
-  x_in = document.getElementById("x_in").value;
-  y_in = document.getElementById("y_in").value;
-  z_in = document.getElementById("z_in").value;
-
-  myMetaData = new MetaData(x_in, y_in, z_in);
+  let a_in = document.getElementById("a_in").value;
+  let b_in = document.getElementById("b_in").value;
+  let c_in = document.getElementById("c_in").value;
+  console.log(gface.x + " " + gface.y + " " + gface.w + " " + gface.h);
+  myMetaData = new MetaData(a_in, b_in, c_in, gface);
   let myMetaDataStr = JSON.stringify(myMetaData);
   let metadata = new TextEncoder("utf-8").encode(myMetaDataStr);
   gmetadata = metadata;
 }
 
 function updateData(metadata) {
-    document.getElementById("x_out").value = Number(metadata.x);
-    document.getElementById("y_out").value = Number(metadata.y);
-    document.getElementById("z_out").value = Number(metadata.z);
+  document.getElementById("a_out").value = Number(metadata.a);
+  document.getElementById("b_out").value = Number(metadata.b);
+  document.getElementById("c_out").value = Number(metadata.c);
 }
 
 class MetadataFunction extends InsertableFunction {
-    getSenderStream(type) {
-        console.log("MetadataFunction: getSenderStream");
-        return new TransformStream({transform: pushMetadata});
-    }
-    
-    getReceiverStream(type) {
-        console.log("MetadataFunction: getReceiverStream");
-        return new TransformStream({transform: popMetadata});
-    }
-    
-    setSenderStream(readableStream, writableStream) {
-        readableStream
-            .pipeThrough (this.getSenderStream('video'));
+  getSenderStream(type) {
+    console.log("MetadataFunction: getSenderStream");
+    return new TransformStream({ transform: pushMetadata });
+  }
 
-    }
+  getReceiverStream(type) {
+    console.log("MetadataFunction: getReceiverStream");
+    return new TransformStream({ transform: popMetadata });
+  }
+
+  setSenderStream(readableStream, writableStream) {
+    readableStream.pipeThrough(this.getSenderStream("video"));
+  }
 }
 const metadataFunction = new MetadataFunction();
-addFunction('MetadataFunction', metadataFunction);
+addFunction("MetadataFunction", metadataFunction);
 
 function getInsertableMetadata() {
   return gmetadata;
@@ -57,17 +63,24 @@ function getInsertableMetadata() {
 
 function onInsertableMetadata(metadata) {
   if (metadata == null) {
-      return;
+    return;
   }
   try {
     let myMetaDataStr = new TextDecoder("utf-8").decode(metadata);
     //console.log(myMetaDataStr);
     let myMetaData = JSON.parse(myMetaDataStr);
     console.log(
-      "x : %d, y : %d, z : %d",
-      Number(myMetaData.x),
-      Number(myMetaData.y),
-      Number(myMetaData.z)
+      "a : %d, b : %d, c : %d",
+      Number(myMetaData.a),
+      Number(myMetaData.b),
+      Number(myMetaData.c)
+    );
+    console.log(
+      "x : %d, y : %d, w : %d, h : %d",
+      Number(myMetaData.face.x),
+      Number(myMetaData.face.y),
+      Number(myMetaData.face.w),
+      Number(myMetaData.face.h)
     );
     updateData(myMetaData);
   } catch (e) {
