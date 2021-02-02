@@ -30,7 +30,10 @@ function startVideo() {
   printLog("supportsInsertableStreams=" + supportsInsertableStreams);
 
   console.log("startVideo()");
-  const constraints = { video: { width: 320, height: 240 }, audio: true };
+  const constraints = {
+    video: { width: localVideo.width, height: localVideo.height },
+    audio: true,
+  };
   console.log("getUserMedia constraints:", constraints);
 
   navigator.mediaDevices
@@ -58,7 +61,7 @@ function stopVideo() {
   localStream = null;
 }
 
-async function connectInernal() {
+async function connectInternal() {
   this.pc1.onicecandidate = (e) => {
     if (e.candidate) {
       this.pc2.addIceCandidate(e.candidate);
@@ -116,7 +119,7 @@ function connect() {
     this.pc1.getSenders().forEach(setupSenderTransform);
   }
 
-  connectInernal();
+  connectInternal();
 }
 
 function disconnect() {

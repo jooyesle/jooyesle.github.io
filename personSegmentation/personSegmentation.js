@@ -1,4 +1,32 @@
+const rainbow = [
+  [110, 64, 170],
+  [106, 72, 183],
+  [100, 81, 196],
+  [92, 91, 206],
+  [84, 101, 214],
+  [75, 113, 221],
+  [66, 125, 224],
+  [56, 138, 226],
+  [48, 150, 224],
+  [40, 163, 220],
+  [33, 176, 214],
+  [29, 188, 205],
+  [26, 199, 194],
+  [26, 210, 182],
+  [28, 219, 169],
+  [33, 227, 155],
+  [41, 234, 141],
+  [51, 240, 128],
+  [64, 243, 116],
+  [79, 246, 105],
+  [96, 247, 97],
+  [115, 246, 91],
+  [134, 245, 88],
+  [155, 243, 88],
+];
+
 let video = document.querySelector("video");
+video.addEventListener("playing", loadAndUseBodyPix);
 
 if (navigator.mediaDevices.getUserMedia) {
   navigator.mediaDevices
@@ -6,41 +34,46 @@ if (navigator.mediaDevices.getUserMedia) {
     .then(function (stream) {
       video.srcObject = stream;
     })
-    .catch(function (err0r) {
+    .catch(function (error) {
       console.log("Something went wrong!");
     });
 }
 
-video.addEventListener("playing", loadAndUseBodyPix);
+const opacity = 0.7;
 
 async function loadAndUseBodyPix() {
   // load the BodyPix model from a checkpoint
   const net = await bodyPix.load();
 
-  // arguments for estimating person segmentation.
-  const outputStride = 16;
-  const segmentationThreshold = 0.5;
-
   setInterval(async () => {
+    // arguments for estimating person segmentation.
+    const outputStride = 16;
+    const segmentationThreshold = 0.5;
+
+    // person segmentation
     const personSegmentation = await net.estimatePersonSegmentation(
       video,
       outputStride,
       segmentationThreshold
     );
-
-    //console.log(personSegmentation);
-
     const maskBackground = true;
-    // Convert the personSegmentation into a mask to darken the background.
     const backgroundDarkeningMask = bodyPix.toMaskImageData(
       personSegmentation,
       maskBackground
     );
 
-    const opacity = 0.7;
+    let person = document.getElementById("PersonEstimation");
+    bodyPix.drawMask(person, video, backgroundDarkeningMask, opacity);
+  }, 100);
 
-    let canvas = document.getElementById("BackgroundErase");
-    // draw the mask onto the image on a canvas.  With opacity set to 0.7 this will darken the background.
-    bodyPix.drawMask(canvas, video, backgroundDarkeningMask, opacity);
-  }, 50);
+  setInterval(async () => {
+    // part segmentation
+    const partSegmentation = await net.estimatePartSegmentation(video);
+    const coloredPartImage = bodyPix.toColoredPartImageData(
+      partSegmentation,
+      rainbow
+    );
+    let part = document.getElementById("PartSegmentation");
+    bodyPix.drawMask(part, video, coloredPartImage, opacity);
+  }, 100);
 }

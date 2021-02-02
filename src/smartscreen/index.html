@@ -51,7 +51,7 @@ canvas{
         <canvas id="remote_canvas" width="320" height="240"style="border: solid 1px black;"></canvas>
         <br/>
         <button onclick="connect()">Connect</button>
-        <button onclick="disconnect()">Disconnect</button>                
+        <button onclick="disconnect();resetFaceDetection()">Disconnect</button>                
     </div>
 </div>
 <br><br>
@@ -62,7 +62,7 @@ canvas{
     <div class="ui_body">
     <div class="local">
     Input integer a, b and c and click Append in order to append to insertable stream.
-    <form id="metadata_input" onsubmit="return false">
+    <form id="simpledata_input" onsubmit="return false">
         <div>
             <label for="a_in"> a : </label>
             <input type="number" value="1" min="0" step="1" name="a" id="a_in" placeholder="required" required>
@@ -126,7 +126,7 @@ canvas{
     <div class="ui_title">Face Detection Test</div>
     <div class="ui_body">
         <div class="local">
-            <label><input type="checkbox" onchange='handleEnableFaceDetection(this);' id="faceDetection" disabled> Enable Face Detection</label><br>
+            <label><input type="checkbox" onchange='handleFaceDetection(this);' id="faceDetection" disabled> Enable Face Detection</label><br>
             <label>Set Interval <input type="number" value="100" min="100" step="100" id="faceDetectionInterval" disabled>[ms]</label><br>
         </div>
     </div>
@@ -136,10 +136,18 @@ canvas{
 <!-- logbox -->
 <div class="logs" id="logbox"></div>
 </html>
-<script src="js/insertableStream.js" type="text/javascript"></script>
-<script src="js/encryptionFunction.js" type="text/javascript"></script>
-<script src="js/metadataFunction.js" type="text/javascript"></script>
+<!--video control-->
 <script src="js/main.js" type="text/javascript"></script>
-<!--Face Detection-->
+<!--library-->
 <script src="js/face-api/face-api.min.js" type="text/javascript"></script>
-<script src="js/faceDetection.js" type="text/javascript"></script>
+<!--worker-->
+<!--<script src="js/workers/loadFaceApi.js" type="text/javascript"></script>-->
+<!--insertable stream -->
+<script src="js/insertableStream.js" type="text/javascript"></script>
+<!--functions-->
+<script src="js/encryptionFunction.js" type="text/javascript"></script>
+<script src="js/simpleFunction.js" type="text/javascript"></script>
+<script src="js/faceDetectionFunction.js" type="text/javascript"></script>
+
+
+
