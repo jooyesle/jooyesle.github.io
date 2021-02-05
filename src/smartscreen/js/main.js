@@ -84,6 +84,9 @@ async function connectInternal() {
   const answer = await this.pc2.createAnswer();
   await this.pc1.setRemoteDescription(answer);
   await this.pc2.setLocalDescription(answer);
+
+  Monitor.getMonitor().addStreamMonitor('local_monitor', 'local_video', pc1, false);
+  Monitor.getMonitor().addStreamMonitor('remote_monitor', 'remote_video', pc2, true);
 }
 
 function connect() {
