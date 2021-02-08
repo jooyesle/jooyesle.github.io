@@ -53,11 +53,38 @@ let faceEncoded = null;
 function handleFaceDetection(checkbox) {
   console.log("enableFaceDetection: " + checkbox.checked);
   faceDetectionfunc(checkbox.checked);
+  if (checkbox.checked) {
+    face0.disabled = false;
+    face1.disabled = false;
+    face2.disabled = false;
+    face3.disabled = false;
+    faceDrawer.start();
+  } else {
+    face0.disabled = true;
+    face1.disabled = true;
+    face2.disabled = true;
+    face3.disabled = true;
+    faceDrawer.stop();
+  }
+}
+
+function handleSelectFaceImage(radio) {
+  console.log('selected face:' + radio.value);
+  if (radio.value === 'face0') {
+    faceDrawer.selectFaceImage(0);
+  } else if (radio.value === 'face1') {
+    faceDrawer.selectFaceImage(1);
+  } else if (radio.value === 'face2') {
+    faceDrawer.selectFaceImage(2);
+  } else {
+    faceDrawer.selectFaceImage(3);
+  }
 }
 
 let interval = -1;
 let localCanvas = document.getElementById("local_canvas");
 let remoteCanvas = document.getElementById("remote_canvas");
+var faceDrawer = new FaceDrawer(remoteCanvas);
 
 function faceDetectionfunc(enabled) {
   if (enabled) {
@@ -107,36 +134,6 @@ function faceDetectionfunc(enabled) {
   }
 }
 
-function drawRemoteFaceDetection(myMetaData) {
-  let ctx = remoteCanvas.getContext("2d");
-  if (!faceDetection.checked) {
-    ctx.clearRect(0, 0, remoteCanvas.width, remoteCanvas.height);
-    return;
-  }
-
-  ctx.lineWidth = 3;
-  ctx.strokeStyle = "rgb(255, 102, 0)";
-  ctx.clearRect(0, 0, remoteCanvas.width, remoteCanvas.height);
-  rFace = new Face(
-    Number(myMetaData.x),
-    Number(myMetaData.y),
-    Number(myMetaData.w),
-    Number(myMetaData.h)
-  );
-  ctx.beginPath();
-  ctx.ellipse(
-    rFace.x + rFace.w / 2,
-    rFace.y + rFace.h / 2,
-    rFace.w / 2,
-    rFace.h / 2,
-    0,
-    0,
-    2 * Math.PI
-  );
-  ctx.stroke();
-  ctx.closePath();
-}
-
 function getFaceEncoded() {
   return faceEncoded;
 }
@@ -147,7 +144,15 @@ function onInsertableFaceData(received) {
   }
   try {
     let faceStr = new TextDecoder("utf-8").decode(received);
-    drawRemoteFaceDetection(JSON.parse(faceStr));
+    //drawRemoteFaceDetection(JSON.parse(faceStr));
+    let myMetaData = JSON.parse(faceStr);
+    rFace = new Face(
+      Number(myMetaData.x),
+      Number(myMetaData.y),
+      Number(myMetaData.w),
+      Number(myMetaData.h)
+    );
+    faceDrawer.updateFaceData(rFace);
   } catch (e) {
     console.error(e);
   }
