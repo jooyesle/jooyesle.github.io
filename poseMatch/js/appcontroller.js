@@ -200,9 +200,9 @@ AppController.prototype.resource_free = async function () {
   if (this.userRef) {
     await this.userRef.delete();
   }
-  if (this.mediaOptionRef) {
-    await this.mediaOptionRef.delete();
-  }
+  await this.userUnsubscribe();
+  await this.userRefUnsubscribe();
+
   if (this.participants != undefined) {
     this.participants.length = 0;
   }
@@ -246,7 +246,7 @@ AppController.prototype.prepareDialog = function (target, value) {
 };
 
 AppController.prototype.addUser = async function () {
-  this.userCollection.onSnapshot(async (snapshot) => {
+  this.userUnsubscribe = this.userCollection.onSnapshot(async (snapshot) => {
     snapshot.docChanges().forEach(async (change) => {
       let data = change.doc.data();
       if (data === undefined) return;
@@ -294,7 +294,7 @@ AppController.prototype.addUser = async function () {
 };
 
 AppController.prototype.addMediaOptionListener = function () {
-  this.userRef.onSnapshot((doc) => {
+  this.userRefUnsubscribe = this.userRef.onSnapshot((doc) => {
     let data = doc.data();
     if (data === undefined) {
       return;
