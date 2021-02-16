@@ -127,6 +127,8 @@ AppController.prototype.joinRoom = async function () {
   this.userCollection = this.roomRef.collection("users");
   const roomSnapshot = await this.roomRef.get();
 
+  PoseMatchServer.getServer().init(this.user, this.userCollection);
+
   if (this.isHost) {
     if (roomSnapshot.exists) {
       console.log(
@@ -256,12 +258,12 @@ AppController.prototype.addUser = async function () {
           `user Added!! name is : ${data.name}, current users are ${this.userCount}`
         );
         if (this.user != data.name) {
-          await this.call_.addPeerConnection(this.user, data.name);
+          await this.call_.addPeerConnection(this.user, data.name);        
         }
         if (this.participants === undefined) {
           this.participants = [];
         }
-        this.participants.push(data.name);
+        this.participants.push(data.name);        
       } else if (change.type === "removed") {
         this.userCount--;
         console.log(
@@ -282,6 +284,8 @@ AppController.prototype.addUser = async function () {
     name: this.user,
     video: this.mediaOption.video,
     audio: this.mediaOption.audio,
+    state: 'notReady',
+    score: 0,
   });
   this.addMediaOptionListener();
   console.log("set " + this.user);
