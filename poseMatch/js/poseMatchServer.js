@@ -1,23 +1,62 @@
 var gServer = null;
+const gameCanvas = document.querySelector('#game');
 
 class PoseTimer {
     constructor() {
         this.data = new Map();
-        this.data.set(0, 'countdown3');
-        this.data.set(1, 'countdown2');
-        this.data.set(2, 'countdown1');
-        this.data.set(5, 'pose1');
-        this.data.set(8, 'pose2');
-        this.data.set(11, 'pose3');
-        
+        this.addImage(0, '/poseMatch/images/3.png');
+        this.addImage(1, '/poseMatch/images/2.png');
+        this.addImage(2, '/poseMatch/images/1.png');
+        this.addImage(3, '/poseMatch/images/tree.jpg');
+        this.addImage(6, '/poseMatch/images/lunge.jpg');
+        this.addImage(9, '/poseMatch/images/handstand.jpg');
+        this.data.set(12, 'stop');
         this.index = 0;
-        setInterval(function(poseTimer) {
+    }
+
+    addImage(index, path) {
+        const img = new Image();
+        img.src = path;
+        this.data.set(index, img);
+    }
+
+    start() {
+        console.log('[POSE] start timer');
+        this.timerId = setInterval(function(poseTimer) {
             if (poseTimer.data.has(poseTimer.index)) {
-                console.log(poseTimer.index, poseTimer.data);
-                console.log(poseTimer.data.get(poseTimer.index));
+                if (poseTimer.data.get(poseTimer.index) == 'stop') {
+                    poseTimer.stop();
+                    return;
+                }
+                //console.log(poseTimer.data.get(poseTimer.index));
+                poseTimer.drawPose(poseTimer.data.get(poseTimer.index));
             }
             poseTimer.index += 1;
         }, 1000, this);
+    }
+
+    stop() {
+        console.log('[POSE] stop timer');
+        clearInterval(this.timerId);
+        this.clearPose();
+    }
+
+    async drawPose(img) {
+        let ctx = gameCanvas.getContext("2d");
+        var hRatio = gameCanvas.width  / img.width    ;
+        var vRatio =  gameCanvas.height / img.height  ;
+        var ratio  = Math.min ( hRatio, vRatio );
+        var centerShift_x = ( gameCanvas.width - img.width*ratio ) / 2;
+        var centerShift_y = ( gameCanvas.height - img.height*ratio ) / 2;
+
+        ctx.clearRect(0,0,gameCanvas.width, gameCanvas.height);
+        ctx.drawImage(img, 0, 0, img.width, img.height,
+            centerShift_x, centerShift_y, img.width*ratio, img.height*ratio);
+    }
+
+    async clearPose() {
+        let ctx = gameCanvas.getContext("2d");
+        ctx.clearRect(0,0,gameCanvas.width, gameCanvas.height);
     }
 }
 
@@ -111,6 +150,7 @@ class PoseMatchServer {
 }
 
 function onReady() {
+    console.log('ready button');
     PoseMatchServer.getServer().setState('ready');
     //PoseMatchServer.getServer().setScore(100);
 }
@@ -120,6 +160,7 @@ readyButton.addEventListener('click', onReady);
 
 PoseMatchServer.getServer().addListener(function(data) {
     console.log(data);
+    PoseMatchServer.getServer().timer.start();
 });
 
 
