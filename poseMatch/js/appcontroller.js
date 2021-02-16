@@ -3,11 +3,11 @@
 const loginDiv = document.querySelector("#login-div");
 const activeDiv = document.querySelector("#active-div");
 const videosDiv = document.querySelector("#videos-div");
-const localvideoDiv = document.querySelector("#localvideo-div");
+//const localvideoDiv = document.querySelector("#localvideo-div");
 const localvideoName = document.querySelector("#localvideoName");
 const roomSelectionDiv = document.querySelector("#room-selection");
 const previewDiv = document.querySelector("#preview-div");
-const mediaOptionDiv = document.querySelector("#media-option-div");
+//const mediaOptionDiv = document.querySelector("#media-option-div");
 
 var AppController = function () {
   console.log("new AppController!!");
@@ -33,9 +33,9 @@ AppController.prototype.init = function () {
   this.targetRoom = document.querySelector("#targetRoom");
   this.joinButton = document.querySelector("#joinButton");
   this.disconnectButton = document.querySelector("#disconnectButton");
-  this.connectDeviceButton = document.querySelector("#connect-device");
-  this.shareScreenButton = document.querySelector("#share-screen");
-  this.meetNowButton = document.querySelector("#meet-now");
+  //this.connectDeviceButton = document.querySelector("#connect-device");
+  //this.shareScreenButton = document.querySelector("#share-screen");
+  //this.meetNowButton = document.querySelector("#meet-now");
   this.targetRoomLabel = document.querySelector("#targetRoom-label");
   this.localMediaOption = document.querySelectorAll(
     'input[name="local-video"], input[name="local-audio"]'
@@ -55,25 +55,26 @@ AppController.prototype.init = function () {
   this.targetRoom.addEventListener("input", this.checkTargetRoom.bind(this));
   this.joinButton.addEventListener("click", this.joinRoom.bind(this));
   this.disconnectButton.addEventListener("click", this.hangup.bind(this));
-  this.connectDeviceButton.addEventListener(
+
+  /*this.connectDeviceButton.addEventListener(
     "click",
     this.onConnectDevice.bind(this)
-  );
-  this.shareScreenButton.addEventListener(
+  );*/
+  /*this.shareScreenButton.addEventListener(
     "click",
     this.onShareScreen.bind(this)
-  );
-  this.meetNowButton.addEventListener("click", this.onMeetNow.bind(this));
-  this.localMediaOption.forEach((input) =>
+  );*/
+  //this.meetNowButton.addEventListener("click", this.onMeetNow.bind(this));
+  /*this.localMediaOption.forEach((input) =>
     input.addEventListener("change", this.onLocalMediaOption.bind(this))
   );
   this.remoteMediaOption.forEach((input) =>
     input.addEventListener("change", this.onRemoteMediaOption.bind(this))
-  );
+  );*/
   this.denyDialogBtn.addEventListener("click", () => this.remoteDialog.close());
   this.returnLoginBtn.addEventListener("click", () => {
     this.infoBox_.resetMessage();
-    this.hide_(mediaOptionDiv);
+    //this.hide_(mediaOptionDiv);
     this.hideMeetingRoom();
     this.showLoginMenu();
     this.joinErrorDialog.close();
@@ -151,9 +152,11 @@ AppController.prototype.joinRoom = async function () {
   this.hide_(loginDiv);
   this.show_(videosDiv);
   this.show_(previewDiv);
-  this.show_(mediaOptionDiv);
+  //this.show_(mediaOptionDiv);
   this.show_(activeDiv);
   this.infoBox_.loginRoomMessage(this.isHost, this.roomId);
+
+  this.onConnectDevice();
 };
 
 AppController.prototype.checkTargetRoom = function () {
@@ -180,9 +183,9 @@ AppController.prototype.checkTargetRoom = function () {
 
 AppController.prototype.hangup = async function () {
   this.disconnectButton.disabled = true;
-  this.shareScreenButton.disabled = true;
-  this.connectDeviceButton.disabled = true;
-  this.meetNowButton.disabled = true;
+  //this.shareScreenButton.disabled = true;
+  //this.connectDeviceButton.disabled = true;
+  //this.meetNowButton.disabled = true;
 
   localvideoName.innerHTML = "";
   await this.call_.hangup();
@@ -190,7 +193,7 @@ AppController.prototype.hangup = async function () {
 
   this.infoBox_.resetMessage();
 
-  this.hide_(mediaOptionDiv);
+  //this.hide_(mediaOptionDiv);
   this.hideMeetingRoom();
   this.showLoginMenu();
 };
@@ -212,15 +215,16 @@ AppController.prototype.resource_free = async function () {
 
 AppController.prototype.onConnectDevice = async function () {
   if ((await this.call_.onConnectDevice()) == true) {
-    this.meetNowButton.disabled = false;
+    //this.meetNowButton.disabled = false;
+    this.onMeetNow();
   }
 };
 
-AppController.prototype.onShareScreen = async function () {
+/*AppController.prototype.onShareScreen = async function () {
   if ((await this.call_.onShareScreen()) == true) {
     this.meetNowButton.disabled = false;
   }
-};
+};*/
 
 AppController.prototype.prepareDialog = function (target, value) {
   value = value === true ? value : value === "true";
@@ -345,7 +349,7 @@ AppController.prototype.onRemoteMediaOption = function (event) {
 };
 
 AppController.prototype.hideMeetingRoom = function () {
-  this.meetNowButton.disabled = false;
+  //this.meetNowButton.disabled = false;
   this.show_(loginDiv);
   this.hide_(videosDiv);
   this.hide_(previewDiv);
@@ -353,7 +357,7 @@ AppController.prototype.hideMeetingRoom = function () {
 };
 
 AppController.prototype.showMeetingRoom = function () {
-  this.meetNowButton.disabled = true;
+  //this.meetNowButton.disabled = true;
   this.hide_(loginDiv);
   this.show_(videosDiv);
   this.show_(previewDiv);
@@ -365,8 +369,8 @@ AppController.prototype.showLoginMenu = function () {
   this.joinButton.disabled = false;
   this.targetRoom.disabled = false;
   this.targetRoom.value = "";
-  this.connectDeviceButton.disabled = false;
-  this.shareScreenButton.disabled = false;
+  //this.connectDeviceButton.disabled = false;
+  //this.shareScreenButton.disabled = false;
 
   this.isHost = false;
   this.userCount = 0;
