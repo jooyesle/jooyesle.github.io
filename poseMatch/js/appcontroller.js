@@ -128,7 +128,8 @@ AppController.prototype.joinRoom = async function () {
   this.userCollection = this.roomRef.collection("users");
   const roomSnapshot = await this.roomRef.get();
 
-  PoseMatchServer.getServer().init(this.user, this.userCollection);
+  PoseMatch.getInstance().init(this.user, this.userCollection);
+  //PoseMatchServer.getServer().init(this.user, this.userCollection);
 
   if (this.isHost) {
     if (roomSnapshot.exists) {

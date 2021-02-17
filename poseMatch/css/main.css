@@ -21,11 +21,19 @@ video {
 .monitor {
     position: absolute;
     /*border: solid 1px red;*/
+    z-index: 9;
 }
 
 .system-monitor {
     position: absolute;
     /*border: solid 1px blue;*/
+    z-index: 8;
+}
+
+.poseview {
+    position: absolute;
+    /*border: solid 3px black;*/
+    z-index: 7;
 }
 
 .hidden {

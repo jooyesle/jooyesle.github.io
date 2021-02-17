@@ -39,7 +39,7 @@ async function loadAndUsePoseNet() {
       nmsRadius: 20,
     });*/
     const poses = await net.estimateSinglePose(video, 0.5, false, 16);
-    drawSkeleton(poses, document.getElementById("PoseEstimation"));
+    //drawSkeleton(poses, document.getElementById("PoseEstimation"));
     if (!readyDone) {
       document.getElementById("readyButton").disabled = false;
       readyDone = true;

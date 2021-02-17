@@ -145,6 +145,7 @@ Connection.prototype.initConnection = async function () {
 Connection.prototype.addRemoteStream = function (index, peer) {
   const videosDiv = document.querySelector("#videos-div");
   var canvas = document.createElement("canvas");
+  var gameview = document.createElement("canvas");
   var video = document.createElement("video");
   var div = document.createElement("div");
   var text = document.createTextNode(peer);
@@ -162,6 +163,13 @@ Connection.prototype.addRemoteStream = function (index, peer) {
   canvas.width = "320";
   canvas.height = "100";
 
+  gameview.id = `gameview${index}`;
+  gameview.style.zIndex = 7;
+  gameview.style.position = "absolute";
+  gameview.style.border   = "1px solid red";
+  gameview.width = "320";
+  gameview.height = "240";
+
   this.remoteCanvas = canvas;
 
   var remotevideoDiv = document.createElement("div");
@@ -172,6 +180,7 @@ Connection.prototype.addRemoteStream = function (index, peer) {
 
   remotevideoDiv.append(div);
   remotevideoDiv.append(canvas);
+  remotevideoDiv.append(gameview);
   remotevideoDiv.append(video);
 
   this.remoteVideoDiv = remotevideoDiv;
@@ -179,6 +188,7 @@ Connection.prototype.addRemoteStream = function (index, peer) {
   this.remoteVideo.srcObject = this.remoteStream;
 
   console.log("addRemoteStream: remotemonitor id", canvas.id);
+  PoseMatch.getInstance().getViewManager().addUserView(peer, gameview);
 };
 
 Connection.prototype.startOffer = async function () {
