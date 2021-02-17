@@ -22,17 +22,21 @@ class PoseTimer {
 
     start() {
         console.log('[POSE] start timer');
-        this.timerId = setInterval(function(poseTimer) {
-            if (poseTimer.data.has(poseTimer.index)) {
-                if (poseTimer.data.get(poseTimer.index) == 'stop') {
-                    poseTimer.stop();
-                    return;
+        this.timerId = setInterval(
+            function (poseTimer) {
+                if (poseTimer.data.has(poseTimer.index)) {
+                    if (poseTimer.data.get(poseTimer.index) == 'stop') {
+                        poseTimer.stop();
+                        return;
+                    }
+                    //console.log(poseTimer.data.get(poseTimer.index));
+                    poseTimer.drawPose(poseTimer.data.get(poseTimer.index));
                 }
-                //console.log(poseTimer.data.get(poseTimer.index));
-                poseTimer.drawPose(poseTimer.data.get(poseTimer.index));
-            }
-            poseTimer.index += 1;
-        }, 1000, this);
+                poseTimer.index += 1;
+            },
+            1000,
+            this
+        );
     }
 
     stop() {
@@ -42,21 +46,30 @@ class PoseTimer {
     }
 
     async drawPose(img) {
-        let ctx = gameCanvas.getContext("2d");
-        var hRatio = gameCanvas.width  / img.width    ;
-        var vRatio =  gameCanvas.height / img.height  ;
-        var ratio  = Math.min ( hRatio, vRatio );
-        var centerShift_x = ( gameCanvas.width - img.width*ratio ) / 2;
-        var centerShift_y = ( gameCanvas.height - img.height*ratio ) / 2;
+        let ctx = gameCanvas.getContext('2d');
+        var hRatio = gameCanvas.width / img.width;
+        var vRatio = gameCanvas.height / img.height;
+        var ratio = Math.min(hRatio, vRatio);
+        var centerShift_x = (gameCanvas.width - img.width * ratio) / 2;
+        var centerShift_y = (gameCanvas.height - img.height * ratio) / 2;
 
-        ctx.clearRect(0,0,gameCanvas.width, gameCanvas.height);
-        ctx.drawImage(img, 0, 0, img.width, img.height,
-            centerShift_x, centerShift_y, img.width*ratio, img.height*ratio);
+        ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+        ctx.drawImage(
+            img,
+            0,
+            0,
+            img.width,
+            img.height,
+            centerShift_x,
+            centerShift_y,
+            img.width * ratio,
+            img.height * ratio
+        );
     }
 
     async clearPose() {
-        let ctx = gameCanvas.getContext("2d");
-        ctx.clearRect(0,0,gameCanvas.width, gameCanvas.height);
+        let ctx = gameCanvas.getContext('2d');
+        ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
     }
 }
 
@@ -74,10 +87,8 @@ class PoseMatchServer {
         this.timer = new PoseTimer();
     }
 
-    
     static getServer() {
-        if (gServer == null)
-            gServer = new PoseMatchServer();
+        if (gServer == null) gServer = new PoseMatchServer();
         return gServer;
     }
 
@@ -89,7 +100,7 @@ class PoseMatchServer {
             snapshot.docChanges().forEach(async (change) => {
                 let data = change.doc.data();
                 if (data === undefined) return;
-                if (change.type === "added" && data.name != this.user) {
+                if (change.type === 'added' && data.name != this.user) {
                     this.addUser(data.name);
                 }
                 console.log('[POSE] changed data: ', data);
@@ -111,26 +122,31 @@ class PoseMatchServer {
 
     async setState(state) {
         this.userRef = this.userCollection.doc(this.user);
-        this.userRef.set({
-            name: this.user,
-            state: state
-        }, {merge: true});       
+        this.userRef.set(
+            {
+                name: this.user,
+                state: state,
+            },
+            { merge: true }
+        );
     }
 
     async setScore(score) {
         this.userRef = this.userCollection.doc(this.user);
-        this.userRef.set({
-            name: this.user,
-            score: score
-        }, {merge: true});       
+        this.userRef.set(
+            {
+                name: this.user,
+                score: score,
+            },
+            { merge: true }
+        );
     }
-
 
     addListener(listener) {
         this.listeners.push(listener);
     }
 
-    checkReadyAllUsers() {        
+    checkReadyAllUsers() {
         //console.log('[POSE] checkReadyAllUsers', this.dataMap);
         var readyAll = true;
         this.dataMap.forEach((value, key, map) => {
@@ -141,26 +157,24 @@ class PoseMatchServer {
         });
 
         if (readyAll == true) {
-            this.listeners.forEach(listener => {
+            this.listeners.forEach((listener) => {
                 listener('[POSE] ready all !!');
             });
         }
-
     }
 }
 
+let readyButton = document.querySelector('#readyButton');
+readyButton.addEventListener('click', onReady);
+
 function onReady() {
+    readyButton.disabled = true;
     console.log('ready button');
     PoseMatchServer.getServer().setState('ready');
     //PoseMatchServer.getServer().setScore(100);
 }
 
-const readyButton = document.querySelector('#readyButton');
-readyButton.addEventListener('click', onReady);
-
-PoseMatchServer.getServer().addListener(function(data) {
+PoseMatchServer.getServer().addListener(function (data) {
     console.log(data);
     PoseMatchServer.getServer().timer.start();
 });
-
-

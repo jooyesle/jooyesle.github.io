@@ -29,6 +29,7 @@ async function loadAndUsePoseNet() {
     multiplier: 1.0,
   });
 
+  let readyDone = false;
   //video
   setInterval(async () => {
     /*const poses = await net.estimateMultiplePoses(video, {
@@ -39,6 +40,11 @@ async function loadAndUsePoseNet() {
     });*/
     const poses = await net.estimateSinglePose(video, 0.5, false, 16);
     drawSkeleton(poses, document.getElementById("PoseEstimation"));
+    if (!readyDone) {
+      document.getElementById("readyButton").disabled = false;
+      readyDone = true;
+    }
+
     //calcCosSim(treeVec, treeRes);
     //calcCosSim(lungeVec, lungeRes);
     //calcCosSim(handstandVec, handstandRes);

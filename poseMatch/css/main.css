@@ -1,158 +1,158 @@
 :root {
-  --bg: #333;
-  --text-color: white;
+    --bg: #333;
+    --text-color: white;
 }
 
 body {
-  font-family: sans-serif;
-  background-color: var(--bg);
-  color: var(--text-color);
+    font-family: sans-serif;
+    background-color: var(--bg);
+    color: var(--text-color);
 
-  position: relative;
-  width: 100%;
-  height: 100%;
+    position: relative;
+    width: 100%;
+    height: 100%;
 }
 
 video {
-  max-width: 100%;
-  width: 320px;
+    max-width: 100%;
+    width: 320px;
 }
 
 .monitor {
-  position: absolute;
-  /*border: solid 1px red;*/
+    position: absolute;
+    /*border: solid 1px red;*/
 }
 
 .system-monitor {
-  position: absolute;
-  /*border: solid 1px blue;*/
+    position: absolute;
+    /*border: solid 1px blue;*/
 }
 
 .hidden {
-  display: none;
+    display: none;
 }
 
 button {
-  margin: 0.5em 0 0.5em 0;
+    margin: 0.5em 0 0.5em 0;
 }
 
 .grid {
-  display: inline-block;
-  margin: 5px 5px 5px 5px;
-  /*border: grey 2px solid;*/
+    display: inline-block;
+    margin: 5px 5px 5px 5px;
+    /*border: grey 2px solid;*/
 }
 
 .error-label {
-  color: #f44336;
-  font-size: 0.85em;
-  font-weight: 200;
-  margin: 0;
+    color: #f44336;
+    font-size: 0.85em;
+    font-weight: 200;
+    margin: 0;
 }
 
 .column {
-  float: left;
-  width: 50%;
-  box-sizing: border-box;
+    float: left;
+    width: 50%;
+    box-sizing: border-box;
 }
 
 .row:after {
-  display: table;
-  box-sizing: border-box;
+    display: table;
+    box-sizing: border-box;
 }
 
 #PoseEstimation {
-  position: relative;
-  top: 2px;
-  right: 328px;
+    position: relative;
+    top: 2px;
+    right: 328px;
 }
 
 #localvideo {
-  border: solid 2px yellow;
+    border: solid 2px yellow;
 }
 
 #login-div {
-  width: 100vw;
-  position: absolute;
-  left: 45%;
-  top: 200%;
+    width: 100vw;
+    position: absolute;
+    left: 45%;
+    top: 200%;
 }
 
 h1 {
-  width: 100vw;
-  text-align: center;
-  padding: 20px;
+    width: 100vw;
+    text-align: center;
+    padding: 20px;
 }
 
 h3 {
-  position: relative;
-  right: 20px;
+    position: relative;
+    right: 20px;
 }
 
 #roomInfo {
-  text-align: center;
+    text-align: center;
 }
 
 #disconnectButton,
 #readyButton {
-  float: right;
+    float: right;
 }
 
 dialog {
-  background-color: var(--bg);
-  color: var(--text-color);
-  text-align: center;
-  border: none;
-  padding: 2rem;
-  border-radius: 6px;
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.25);
-  max-width: 90vw;
+    background-color: var(--bg);
+    color: var(--text-color);
+    text-align: center;
+    border: none;
+    padding: 2rem;
+    border-radius: 6px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.25);
+    max-width: 90vw;
 }
 
 dialog[open] {
-  animation: appear 0.15s cubic-bezier(0, 1.8, 1, 1.8);
+    animation: appear 0.15s cubic-bezier(0, 1.8, 1, 1.8);
 }
 
 dialog::backdrop {
-  background: linear-gradient(
-    45deg,
-    rgba(0, 143, 104, 0.5),
-    rgba(250, 224, 66, 0.5)
-  );
+    background: linear-gradient(
+        45deg,
+        rgba(0, 143, 104, 0.5),
+        rgba(250, 224, 66, 0.5)
+    );
 }
 
 dialog .actions {
-  display: flex;
-  justify-content: space-around;
+    display: flex;
+    justify-content: space-around;
 }
 
 @keyframes appear {
-  from {
-    opacity: 0;
-    transform: translateX(-3rem);
-  }
+    from {
+        opacity: 0;
+        transform: translateX(-3rem);
+    }
 
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .buttons {
-  align-content: center;
+    align-content: center;
 }
 
 [class*="btn-"] {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  color: #fff;
-  font-size: 16px;
-  line-height: 45px;
-  margin-right: 3em;
-  max-width: 100px;
-  text-decoration: none;
-  text-transform: uppercase;
-  vertical-align: middle;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    color: #fff;
+    font-size: 16px;
+    line-height: 45px;
+    margin-right: 3em;
+    max-width: 100px;
+    text-decoration: none;
+    text-transform: uppercase;
+    vertical-align: middle;
 }
 
 /**
@@ -161,37 +161,37 @@ dialog .actions {
  * ===========================
  */
 .btn-1 {
-  letter-spacing: 0;
-  -webkit-transition: all 0.28s ease-in-out;
-  transition: all 0.28s ease-in-out;
+    letter-spacing: 0;
+    -webkit-transition: all 0.28s ease-in-out;
+    transition: all 0.28s ease-in-out;
 }
 .btn-1:hover,
 .btn-1:focus,
 .btn-1:active {
-  letter-spacing: 5px;
+    letter-spacing: 5px;
 }
 .btn-1:after,
 .btn-1:before {
-  border: 1px solid rgba(255, 255, 255, 0);
-  bottom: 0;
-  content: " ";
-  display: block;
-  margin: 0 auto;
-  position: relative;
-  -webkit-transition: all 0.28s ease-in-out;
-  transition: all 0.28s ease-in-out;
-  width: 0;
+    border: 1px solid rgba(255, 255, 255, 0);
+    bottom: 0;
+    content: " ";
+    display: block;
+    margin: 0 auto;
+    position: relative;
+    -webkit-transition: all 0.28s ease-in-out;
+    transition: all 0.28s ease-in-out;
+    width: 0;
 }
 .btn-1:hover:after,
 .btn-1:hover:before {
-  border-color: #fff;
-  -webkit-transition: width 350ms ease-in-out;
-  transition: width 350ms ease-in-out;
-  width: 70%;
+    border-color: #fff;
+    -webkit-transition: width 350ms ease-in-out;
+    transition: width 350ms ease-in-out;
+    width: 70%;
 }
 .btn-1:hover:before {
-  bottom: auto;
-  top: 0;
+    bottom: auto;
+    top: 0;
 }
 
 /**
@@ -200,20 +200,20 @@ dialog .actions {
  * ===========================
  */
 .btn-2 {
-  background: #e3403a;
-  border: 1px solid #da251f;
-  box-shadow: 0 2px 0 #d6251f, 2px 4px 6px #e02a24;
-  font-weight: bold;
-  letter-spacing: 1px;
-  -webkit-transition: all 0.15s linear;
-  transition: all 0.15s linear;
+    background: #e3403a;
+    border: 1px solid #da251f;
+    box-shadow: 0 2px 0 #d6251f, 2px 4px 6px #e02a24;
+    font-weight: bold;
+    letter-spacing: 1px;
+    -webkit-transition: all 0.15s linear;
+    transition: all 0.15s linear;
 }
 .btn-2:hover {
-  background: #e02c26;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 1px 1px 2px rgba(255, 255, 255, 0.2);
-  color: #ec817d;
-  text-shadow: -1px -1px 0 #c2211c;
+    background: #e02c26;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 1px 1px 2px rgba(255, 255, 255, 0.2);
+    color: #ec817d;
+    text-shadow: -1px -1px 0 #c2211c;
 }
 
 /**
@@ -222,14 +222,15 @@ dialog .actions {
  * ===========================
  */
 .btn-3 {
-  border: 1px solid;
-  overflow: hidden;
-  position: relative;
+    border: 1px solid;
+    overflow: hidden;
+    position: relative;
+    background-color: skyblue;
 }
 .btn-3 span {
-  z-index: 2;
+    z-index: 2;
 }
-.btn-3:after {
+/*.btn-3:after {
   content: "";
   height: 155px;
   left: -75px;
@@ -243,9 +244,18 @@ dialog .actions {
   transition: all 0.55s cubic-bezier(0.19, 1, 0.22, 1);
   width: 50px;
   z-index: -1;
+}*/
+.btn-3:hover {
+    border-color: steelblue;
+    color: steelblue;
 }
-.btn-3:hover:after {
-  left: 120%;
+
+/*hide button when disabled*/
+.btn-3:disabled {
+    background-color: var(--bg);
+    color: var(--bg);
+    border-color: var(--bg);
+    color: var(--bg);
 }
 
 /**
@@ -254,85 +264,85 @@ dialog .actions {
  * ===========================
  */
 .btn-4 {
-  background: #03c4a1;
-  border: 0 solid;
-  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0);
-  outline: 1px solid rgba(255, 255, 255, 0.5);
-  -webkit-transition: all 1.25s cubic-bezier(0.19, 1, 0.22, 1);
-  transition: all 1.25s cubic-bezier(0.19, 1, 0.22, 1);
+    background: #03c4a1;
+    border: 0 solid;
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0);
+    outline: 1px solid rgba(255, 255, 255, 0.5);
+    -webkit-transition: all 1.25s cubic-bezier(0.19, 1, 0.22, 1);
+    transition: all 1.25s cubic-bezier(0.19, 1, 0.22, 1);
 }
 .btn-4:hover {
-  border: 1px solid;
-  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5),
-    0 0 20px rgba(255, 255, 255, 0.2);
-  outline-color: rgba(255, 255, 255, 0);
-  outline-offset: 15px;
-  text-shadow: 1px 1px 2px #427388;
+    border: 1px solid;
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5),
+        0 0 20px rgba(255, 255, 255, 0.2);
+    outline-color: rgba(255, 255, 255, 0);
+    outline-offset: 15px;
+    text-shadow: 1px 1px 2px #427388;
 }
 
 input[type="checkbox"] {
-  display: none;
+    display: none;
 }
 .label_on-off {
-  overflow: hidden;
-  position: relative;
-  display: inline-block;
-  width: 58px;
-  height: 26px;
-  -webkit-border-radius: 13px;
-  -moz-border-radius: 13px;
-  border-radius: 13px;
-  background-color: #ed4956;
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  -ms-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  transition: all 0.3s;
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+    width: 58px;
+    height: 26px;
+    -webkit-border-radius: 13px;
+    -moz-border-radius: 13px;
+    border-radius: 13px;
+    background-color: #ed4956;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
 }
 .label_on-off > * {
-  vertical-align: middle;
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  -ms-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  transition: all 0.3s;
-  font-size: 14px;
+    vertical-align: middle;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+    font-size: 14px;
 }
 .label_on-off .marble {
-  position: absolute;
-  top: 1px;
-  left: 1px;
-  display: block;
-  width: 24px;
-  height: 24px;
-  background-color: #fff;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  border-radius: 50%;
-  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    display: block;
+    width: 24px;
+    height: 24px;
+    background-color: #fff;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 .label_on-off .on {
-  display: none;
-  padding-left: 12px;
+    display: none;
+    padding-left: 12px;
 }
 .label_on-off .off {
-  padding-left: 30px;
-  line-height: 25px;
+    padding-left: 30px;
+    line-height: 25px;
 }
 .input_on-off:checked + .label_on-off {
-  background-color: #0bba82;
+    background-color: #0bba82;
 }
 .input_on-off:checked + .label_on-off .on {
-  display: inline-block;
+    display: inline-block;
 }
 .input_on-off:checked + .label_on-off .off {
-  display: none;
+    display: none;
 }
 .input_on-off:checked + .label_on-off .marble {
-  left: 33px;
+    left: 33px;
 }
