@@ -70,10 +70,6 @@ class PoseMatchViewManager {
     getUserView(name) {
         return this.viewMap.get(name);
     }
-    
-    addGameView(canvas) {
-        this.gameView = new GameView(canvas);
-    }
 
     addUserView(name, canvas) {
         this.viewMap.set(name, new UserView(name, canvas));
@@ -89,6 +85,4 @@ class PoseMatchViewManager {
             value.clear();
         });
     }
-
-
 }
