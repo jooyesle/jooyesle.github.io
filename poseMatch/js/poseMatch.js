@@ -4,8 +4,7 @@ class PoseData {
     constructor(cmd, imgPath) {
         this.cmd = cmd;
         this.img = new Image();
-        if (imgPath != null)
-            this.img.src = imgPath;
+        if (imgPath != null) this.img.src = imgPath;
     }
 }
 
@@ -17,13 +16,19 @@ class PoseMatch {
         this.data.set(2, new PoseData('countdown1', '/poseMatch/images/1.png'));
         this.data.set(3, new PoseData('pose1', '/poseMatch/images/tree.jpg'));
         this.data.set(6, new PoseData('pose2', '/poseMatch/images/lunge.jpg'));
-        this.data.set(9, new PoseData('pose3', '/poseMatch/images/handstand.jpg'));
+        this.data.set(
+            9,
+            new PoseData('pose3', '/poseMatch/images/handstand.jpg')
+        );
         this.data.set(12, new PoseData('stop', null));
 
         this.server = new PoseMatchServer();
         let gameCanvas = document.querySelector('#game');
         this.viewManager = new PoseMatchViewManager(gameCanvas);
-        this.poseTimer = new PoseTimer(this.viewManager.getGameView(), this.data);      
+        this.poseTimer = new PoseTimer(
+            this.viewManager.getGameView(),
+            this.data
+        );
     }
 
     init(user, userCollection) {
@@ -38,7 +43,7 @@ class PoseMatch {
             PoseMatch.getInstance().getServer().setState('ready');
         });
 
-        this.listener = function(msg) {
+        this.listener = function (msg) {
             let cmd = msg[0];
             let data = msg[1];
             console.log('command:', cmd);
@@ -73,5 +78,4 @@ class PoseMatch {
     getViewManager() {
         return this.viewManager;
     }
-       
 }

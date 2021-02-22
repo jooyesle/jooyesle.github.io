@@ -40,15 +40,55 @@ class UserView {
 
     drawText(text) {
         if (this.canvas == null) {
-            console.log('draw failed')
+            console.log('draw failed');
             return;
         }
         var ctx = this.canvas.getContext('2d');
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         ctx.font = 'bold 20px Courier';
-        ctx.fillStyle = "red";
-        ctx.textAlign = 'center'
-        ctx.fillText(text, this.canvas.width/2, this.canvas.height/2);
+        ctx.fillStyle = 'red';
+        ctx.textAlign = 'center';
+        ctx.fillText(text, this.canvas.width / 2, this.canvas.height / 2);
+    }
+
+    drawSkeleton(keyPoints) {
+        let ctx = this.canvas.getContext('2d');
+        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        let w = 5;
+        let h = 5;
+
+        ctx.beginPath();
+        for (let i = 0; i < skeleton.length; i++) {
+            ctx.moveTo(
+                keyPoints[skeleton[i][0]][0],
+                keyPoints[skeleton[i][0]][1]
+            );
+            ctx.lineTo(
+                keyPoints[skeleton[i][1]][0],
+                keyPoints[skeleton[i][1]][1]
+            );
+        }
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = 'rgb(66, 135, 245)';
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.fillStyle = 'rgb(255, 102, 0)';
+        for (let i = 0; i < keyPoints.length; i++) {
+            ctx.beginPath();
+            ctx.ellipse(
+                keyPoints[i][0],
+                keyPoints[i][1],
+                w,
+                h,
+                0,
+                0,
+                2 * Math.PI
+            );
+            ctx.fill();
+            ctx.closePath();
+        }
     }
 
     clear() {
