@@ -13,10 +13,10 @@ const skeleton = [
     [16, 14],
 ];
 
-var gNet = null;
-var gLocalPose;
-let targetSize = 3;
-gTargetPose = new Array(targetSize);
+const HAVE_ENOUGH_DATA = 4;
+const targetSize = 3;
+let gNet = null;
+let gTargetPose = new Array(targetSize);
 
 class PoseEstimation {
     constructor() {
@@ -47,7 +47,11 @@ class PoseEstimation {
 
     estimateVideo() {
         this.interval = setInterval(async () => {
-            await this.estimateFrame();
+            if (this.frame.readyState == HAVE_ENOUGH_DATA) {
+                await this.estimateFrame();
+            } else {
+                clearInterval(this.interval);
+            }
         }, 100);
     }
 
@@ -75,7 +79,7 @@ class PoseEstimation {
             }
 
             if (this.enableCalcScore) {
-                //this.calcScore();
+                this.calcScore();
             }
         } catch {
             console.log('Error loading pose estimation');
@@ -125,6 +129,8 @@ class PoseEstimation {
     }
 
     calcScore() {
+        if (this.frame.id != 'localvideo') return;
+
         let displayScore = document.getElementById('localScore');
         let startTime = 3;
         let intervalTime = 3;

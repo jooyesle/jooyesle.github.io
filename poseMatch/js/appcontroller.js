@@ -138,13 +138,7 @@ AppController.prototype.joinRoom = async function () {
     PoseMatch.getInstance().init(this.user, this.userCollection);
     //PoseMatchServer.getServer().init(this.user, this.userCollection);
 
-    let localVideo = document.getElementById('localvideo');
-    let userName = this.user;
-    localVideo.addEventListener('playing', function () {
-        if (localVideo.readyState == 4) {
-            createLocalPose(localVideo, userName);
-        }
-    });
+    createVideoPose('localvideo', this.user);
 
     if (this.isHost) {
         if (roomSnapshot.exists) {
@@ -206,14 +200,6 @@ AppController.prototype.hangup = async function () {
     //this.shareScreenButton.disabled = true;
     //this.connectDeviceButton.disabled = true;
     //this.meetNowButton.disabled = true;
-
-    try {
-        clearInterval(gLocalPose.interval);
-    } catch {
-        console.log(
-            'localPoseEstimation was not created: no need to clear interval'
-        );
-    }
 
     localvideoName.innerHTML = '';
     await this.call_.hangup();

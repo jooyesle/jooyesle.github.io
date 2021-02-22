@@ -25,23 +25,31 @@ function loadTargets() {
     }
 }
 
-function createLocalPose(video, userName) {
-    gLocalPose = new PoseEstimation();
-    gLocalPose.setEnableCalcScore(true);
-    gLocalPose.setEnableDrawSkeleton(true);
-    gLocalPose.init(video, userName);
+function createVideoPose(videoId, userName) {
+    let vidPose = new PoseEstimation();
+    let video = document.getElementById(videoId);
+    video.width = 320;
+    video.height = 240;
 
-    check = setInterval(() => {
-        if (gLocalPose.getIsEstimated() == true) {
-            document.getElementById('readyButton').disabled = false;
-            clearInterval(check);
+    if (videoId == 'localvideo') {
+        /*enable and disable ready button */
+        check = setInterval(() => {
+            if (vidPose.getIsEstimated() == true) {
+                document.getElementById('readyButton').disabled = false;
+                clearInterval(check);
+            }
+        }, 100);
+
+        vidPose.setEnableCalcScore(true);
+        vidPose.setEnableDrawSkeleton(true);
+    } else {
+        vidPose.setEnableCalcScore(false);
+        vidPose.setEnableDrawSkeleton(true);
+    }
+
+    video.addEventListener('playing', function () {
+        if (video.readyState == HAVE_ENOUGH_DATA) {
+            vidPose.init(video, userName);
         }
-    }, 100);
-}
-
-function createRemotePose(video, userName) {
-    let remotePose = new PoseEstimation();
-    remotePose.setEnableCalcScore(false);
-    remotePose.setEnableDrawSkeleton(true);
-    remotePose.init(video, userName);
+    });
 }
