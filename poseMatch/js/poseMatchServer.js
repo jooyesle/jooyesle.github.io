@@ -1,9 +1,24 @@
+const GAME_STAGE_COUNT = 3;
+
 class UserData {
     constructor() {
         this.state = 'notReady';
-        this.score = 0;
+        this.score = [];
+        var i;
+        for (i=0; i < GAME_STAGE_COUNT; i++) {
+            this.score[i] = 0;
+        }
+    }
+
+    toString() {
+        return this.score.toString();
+    }
+
+    fromString(str) {
+        this.score.fromString(str);
     }
 }
+
 class PoseMatchServer {
     constructor() {
         this.listeners = [];
@@ -28,7 +43,9 @@ class PoseMatchServer {
                     this.checkReadyAllUsers();
                 }
                 if (data.score != undefined) {
-                    this.dataMap.get(data.name)['score'] = data.score;
+                    let userData = this.dataMap.get(data.name);
+                    userData.score = data.score.split(',');
+                    this.notifyToListener('updateScore');
                 }
             });
         });
@@ -36,7 +53,7 @@ class PoseMatchServer {
 
     addUser(userId) {
         this.dataMap.set(userId, new UserData());
-        //console.log('[POSE] add user', this.dataMap);
+        //console.log('[POSE] add user', this.dataMap);    
     }
 
     async setState(state) {
@@ -50,12 +67,17 @@ class PoseMatchServer {
         );
     }
 
-    async setScore(score) {
+    async setScore(gameNumber, score) {
+        let data = this.dataMap.get(this.user);
+        console.log('---', data);
+        data.score[gameNumber] = score;
+        console.log('---', data.score);
+        
         this.userRef = this.userCollection.doc(this.user);
         this.userRef.set(
             {
                 name: this.user,
-                score: score,
+                score: data.score.toString(),
             },
             { merge: true }
         );
@@ -86,7 +108,7 @@ class PoseMatchServer {
         });
 
         if (readyAll == true) {
-            this.notifyToListener('readyall', null);
+            this.notifyToListener('readyAll', null);
         }
     }
 }

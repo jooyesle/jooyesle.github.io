@@ -24,6 +24,7 @@ class PoseMatch {
         let gameCanvas = document.querySelector('#game');
         this.viewManager = new PoseMatchViewManager(gameCanvas);
         this.poseTimer = new PoseTimer(this.viewManager.getGameView(), this.data);      
+        this.state = 'notReady';
     }
 
     init(user, userCollection) {
@@ -42,13 +43,23 @@ class PoseMatch {
             let cmd = msg[0];
             let data = msg[1];
             console.log('command:', cmd);
+
+            let state = PoseMatch.getInstance().state;
             if (cmd == 'ready') {
                 PoseMatch.getInstance().getViewManager().readyUser(data);
-            } else if (cmd == 'readyall') {
+            } else if (cmd == 'readyAll') {
+                state = 'readyAll';
                 PoseMatch.getInstance().getTimer().start();
+                PoseMatch.getInstance().getViewManager().setState(state);
             } else if (cmd == 'pose1') {
-                PoseMatch.getInstance().getViewManager().clearAll();
+                state = 'playing';
+                PoseMatch.getInstance().getViewManager().setState(state);
+            } else if (cmd == 'updateScore') {
+                PoseMatch.getInstance().getViewManager().setScoreData(
+                    PoseMatch.getInstance().getServer().user,
+                    PoseMatch.getInstance().getServer().dataMap);
             }
+            
         };
 
         this.server.addListener(this.listener);

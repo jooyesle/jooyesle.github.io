@@ -290,7 +290,7 @@ AppController.prototype.addUser = async function () {
     video: this.mediaOption.video,
     audio: this.mediaOption.audio,
     state: 'notReady',
-    score: 0,
+    score: '0,0,0',
   });
   this.addMediaOptionListener();
   console.log("set " + this.user);

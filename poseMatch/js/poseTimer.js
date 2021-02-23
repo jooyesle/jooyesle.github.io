@@ -19,8 +19,11 @@ class PoseTimer {
     }
 
     start() {
+        if (this.timerId) {
+            return;
+        }
         console.log('[POSE] start timer');
-        this.timerId = setInterval(
+        this.timerId = setInterval(            
             function (poseTimer) {
                 if (poseTimer.data.has(poseTimer.index)) {
                     if (poseTimer.data.get(poseTimer.index).cmd == 'stop') {
@@ -39,7 +42,7 @@ class PoseTimer {
     }
 
     stop() {
-        console.log('[POSE] stop timer');
+        console.log('[POSE] stop timer:', this.timerId);
         clearInterval(this.timerId);
         this.targetView.clear();
     }
