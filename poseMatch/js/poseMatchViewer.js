@@ -49,9 +49,13 @@ class UserView {
         this.draw();
     }
 
+    setKeyPoints(keyPoints) {
+        this.keyPoints = keyPoints;
+    }
+
     draw(state) {
         if (this.canvas == null) {
-            console.log('draw failed')
+            console.log('draw failed');
             return;
         }        
         var ctx = this.canvas.getContext('2d');
@@ -85,6 +89,46 @@ class UserView {
             ctx.fillText(value.score.toString(), x, y + 12);
             y += 30;
         });
+    }
+
+    drawSkeleton(ctx) {
+        if (this.keyPoints == null)
+            return;
+
+        let w = 5;
+        let h = 5;
+
+        ctx.beginPath();
+        for (let i = 0; i < skeleton.length; i++) {
+            ctx.moveTo(
+                this.keyPoints[skeleton[i][0]][0],
+                this.keyPoints[skeleton[i][0]][1]
+            );
+            ctx.lineTo(
+                this.keyPoints[skeleton[i][1]][0],
+                this.keyPoints[skeleton[i][1]][1]
+            );
+        }
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = 'rgb(66, 135, 245)';
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.fillStyle = 'rgb(255, 102, 0)';
+        for (let i = 0; i < keyPoints.length; i++) {
+            ctx.beginPath();
+            ctx.ellipse(
+                this.keyPoints[i][0],
+                this.keyPoints[i][1],
+                w,
+                h,
+                0,
+                0,
+                2 * Math.PI
+            );
+            ctx.fill();
+            ctx.closePath();
+        }
     }
 
     clear() {
@@ -129,19 +173,24 @@ class PoseMatchViewManager {
         });
     }
 
+    setState(state) {
+        this.state = state;
+        if (this.state == 'readyAll') {            
+            this.clearAll();
+        }
+    }
+
     setScoreData(name, dataMap) {
         this.viewMap.get(name).setScoreData(dataMap);
+    }
+
+    setKeyPoints(name, keyPoints) {
+        this.viewMap.get(name).setKeyPoints(dataMap);
     }
 
     draw() {
         this.viewMap.forEach((value, key, map) => {
             value.draw(this.state);
         });
-    }
-    setState(state) {
-        this.state = state;
-        if (this.state == 'readyAll') {            
-            this.clearAll();
-        }
     }
 }
