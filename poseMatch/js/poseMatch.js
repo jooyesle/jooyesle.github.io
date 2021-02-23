@@ -34,6 +34,7 @@ class PoseMatch {
 
     init(user, userCollection) {
         let myCanvas = document.querySelector('#PoseEstimation');
+        this.viewManager.setMyName(user);
         this.viewManager.addUserView(user, myCanvas);
 
         this.server.init(user, userCollection);
@@ -51,20 +52,19 @@ class PoseMatch {
 
             let state = PoseMatch.getInstance().state;
             if (cmd == 'ready') {
-                PoseMatch.getInstance().getViewManager().readyUser(data);
+                PoseMatch.getInstance().getViewManager().setState('ready', data);
             } else if (cmd == 'readyAll') {
                 state = 'readyAll';
                 PoseMatch.getInstance().getTimer().start();
-                PoseMatch.getInstance().getViewManager().setState(state);
-            } else if (cmd == 'pose1') {
+                PoseMatch.getInstance().getViewManager().setState(state, null);
+            } else if (cmd.indexOf('pose') >= 0) {
                 state = 'playing';
-                PoseMatch.getInstance().getViewManager().setState(state);
+                PoseMatch.getInstance().getViewManager().setState(state, cmd);
             } else if (cmd == 'updateScore') {
                 PoseMatch.getInstance().getViewManager().setScoreData(
                     PoseMatch.getInstance().getServer().user,
                     PoseMatch.getInstance().getServer().dataMap);
             }
-            
         };
 
         this.server.addListener(this.listener);

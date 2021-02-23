@@ -40,13 +40,17 @@ class UserView {
     }
 
     setText(text) {
-        this.text = text;
-        this.draw();
+        if (this.text != text) {
+            this.text = text;
+            this.draw();
+        }
     }
 
     setScoreData(dataMap) {
-        this.dataMap = dataMap;
-        this.draw();
+        if (this.dataMap != dataMap) {
+            this.dataMap = dataMap;
+            this.draw();
+        }
     }
 
     setKeyPoints(keyPoints) {
@@ -57,13 +61,13 @@ class UserView {
         if (this.canvas == null) {
             console.log('draw failed');
             return;
-        }        
+        }
         var ctx = this.canvas.getContext('2d');
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawText(ctx);
         if (state == 'playing') {
             this.drawScore(ctx);
-            //this.drawSkeleton(ctx);
+            this.drawSkeleton(ctx);
         }
     }
 
@@ -72,8 +76,8 @@ class UserView {
             return;
         ctx.font = 'bold 20px Courier';
         ctx.fillStyle = "red";
-        ctx.textAlign = 'center'
-        ctx.fillText(this.text, this.canvas.width/2, this.canvas.height/2);
+        ctx.textAlign = "center";
+        ctx.fillText(this.text, this.canvas.width / 2, 25);
     }
 
     drawScore(ctx) {
@@ -81,9 +85,9 @@ class UserView {
             return;
         ctx.font = 'bold 12px Courier';
         ctx.fillStyle = "red";
-        ctx.textAlign = 'left'    
+        ctx.textAlign = 'left'
         let x = 5;
-        let y = this.canvas.height/6;
+        let y = this.canvas.height / 6;
         this.dataMap.forEach((value, key, map) => {
             ctx.fillText(key, x, y);
             ctx.fillText(value.score.toString(), x, y + 12);
@@ -115,7 +119,7 @@ class UserView {
         ctx.closePath();
 
         ctx.fillStyle = 'rgb(255, 102, 0)';
-        for (let i = 0; i < keyPoints.length; i++) {
+        for (let i = 0; i < this.keyPoints.length; i++) {
             ctx.beginPath();
             ctx.ellipse(
                 this.keyPoints[i][0],
@@ -142,15 +146,23 @@ class PoseMatchViewManager {
         this.viewMap = new Map();
         this.gameView = new GameView(gameCanvas);
 
-        this.timerId = setInterval(function(viewer) {
+        this.timerId = setInterval(function (viewer) {
             viewer.draw();
         },
-        1000,
-        this);
+            250,
+            this);
+    }
+
+    setMyName(name) {
+        this.myName = name;
     }
 
     getGameView() {
         return this.gameView;
+    }
+
+    getMyUserView() {
+        return this.viewMap.get(this.myName);
     }
 
     getUserView(name) {
@@ -161,11 +173,6 @@ class PoseMatchViewManager {
         this.viewMap.set(name, new UserView(name, canvas));
     }
 
-    readyUser(name) {
-        console.log('ready:', name, this.viewMap.get(name));
-        this.viewMap.get(name).setText('Ready');
-    }
-
     clearAll() {
         this.viewMap.forEach((value, key, map) => {
             value.setText(null);
@@ -173,11 +180,19 @@ class PoseMatchViewManager {
         });
     }
 
-    setState(state) {
-        this.state = state;
-        if (this.state == 'readyAll') {            
+    setState(state, data) {
+        if (this.state == state && this.stateData == data)
+            return;
+
+        if (state == 'ready') {
+            this.viewMap.get(data).setText('Ready');
+        } else if (state == 'readyAll') {
             this.clearAll();
+        } else if (state == 'playing') {
+            this.getMyUserView().setText(data);
         }
+        this.state = state;
+        this.stateData = data;
     }
 
     setScoreData(name, dataMap) {
@@ -185,7 +200,7 @@ class PoseMatchViewManager {
     }
 
     setKeyPoints(name, keyPoints) {
-        this.viewMap.get(name).setKeyPoints(dataMap);
+        this.viewMap.get(name).setKeyPoints(keyPoints);
     }
 
     draw() {

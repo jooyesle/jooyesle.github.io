@@ -69,9 +69,7 @@ class PoseMatchServer {
 
     async setScore(gameNumber, score) {
         let data = this.dataMap.get(this.user);
-        console.log('---', data);
         data.score[gameNumber] = score;
-        console.log('---', data.score);
         
         this.userRef = this.userCollection.doc(this.user);
         this.userRef.set(

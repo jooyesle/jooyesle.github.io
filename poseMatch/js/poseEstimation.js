@@ -73,9 +73,7 @@ class PoseEstimation {
 
             if (this.enableDrawSkeleton) {
                 PoseMatch.getInstance()
-                    .getViewManager()
-                    .getUserView(this.name)
-                    .drawSkeleton(this.getKeyPoint());
+                    .getViewManager().setKeyPoints(this.name, this.getKeyPoint());
             }
 
             if (this.enableCalcScore) {
