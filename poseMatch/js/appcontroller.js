@@ -100,8 +100,6 @@ AppController.prototype.init = function () {
 
     Monitor.getMonitor().addSystemMonitor('systemmonitor', 'localvideo');
     this.call_.addStateListener(Monitor.onStateChanged);
-
-    loadAndUsePoseNet();
 };
 
 AppController.prototype.onVisibilityChange = function () {
@@ -136,10 +134,6 @@ AppController.prototype.joinRoom = async function () {
     const roomSnapshot = await this.roomRef.get();
 
     PoseMatch.getInstance().init(this.user, this.userCollection);
-    //PoseMatchServer.getServer().init(this.user, this.userCollection);
-
-    createVideoPose('localvideo', this.user);
-
     if (this.isHost) {
         if (roomSnapshot.exists) {
             console.log(

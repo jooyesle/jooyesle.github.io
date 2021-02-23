@@ -1,86 +1,121 @@
-const skeleton = [
-    [5, 6],
-    [5, 7],
-    [5, 11],
-    [6, 8],
-    [6, 12],
-    [7, 9],
-    [8, 10],
-    [11, 12],
-    [13, 11],
-    [14, 12],
-    [15, 13],
-    [16, 14],
-];
-
-const HAVE_ENOUGH_DATA = 4;
-const targetSize = 3;
-let gNet = null;
-let gTargetPose = new Array(targetSize);
-
 class PoseEstimation {
-    constructor() {
+    constructor(net, enableCalcScore) {
+        this.net = net;
         this.frame = null;
-        this.name = null;
         this.name = null;
         this.keyPoint = new Array(17);
         this.keyVector = new Array(12);
         this.pose = null;
-        this.isEstimated = false;
-        this.enableDrawSkeleton = false;
+        //this.isEstimated = false;
+        //this.enableDrawSkeleton = false;
         this.interval = null; // only when video
         this.score = 0.0; // true only when localVideo
-        this.enableCalcScore = false; // true only when localVideo
+        this.enableCalcScore = enableCalcScore; // true only when localVideo
+        this.targetPE = null;
+        this.listener = null;
+        this.isLoaded = false;
     }
 
     init(frame, name) {
+        console.log('init');
         this.frame = frame;
         this.name = name;
-        if (this.frame instanceof HTMLVideoElement) {
-            this.estimateVideo();
-        } else if (this.frame instanceof HTMLImageElement) {
-            this.setEnableCalcScore(false);
-            this.setEnableDrawSkeleton(false);
-            this.estimateFrame();
+        // if (this.frame instanceof HTMLVideoElement) {
+        //     this.estimateVideo();
+        // } else if (this.frame instanceof HTMLImageElement) {
+        //     this.estimateFrame();
+        // }
+        this.startup();
+    }
+
+    notifyToListener(cmd, data) {
+        var msg = [cmd, data];
+        if (this.listener != null) {
+            this.listener(msg);
+        } else {
+            console.log('listener error');
         }
     }
 
-    estimateVideo() {
-        this.interval = setInterval(async () => {
-            if (this.frame.readyState == HAVE_ENOUGH_DATA) {
-                await this.estimateFrame();
-            } else {
-                clearInterval(this.interval);
-            }
-        }, 100);
+    setListener(listener) {
+        this.listener = listener;
+    }
+
+    async startup() {
+        //if (this.interval != null) return;
+        //console.log('startup');
+        if (this.frame instanceof HTMLVideoElement) {
+            this.interval = setInterval(async () => {
+                if (this.frame.readyState == HAVE_ENOUGH_DATA) {
+                    //console.log('startup video');
+                    await this.estimateFrame();
+                }
+            }, 100);
+        } else {
+            await this.estimateFrame();
+        }
+    }
+
+    shutdown() {
+        clearInterval(this.interval);
+    }
+
+    // estimateVideo() {
+    //     this.interval = setInterval(async () => {
+    //         if (this.frame.readyState == HAVE_ENOUGH_DATA) {
+    //             await this.estimateFrame();
+    //         } else {
+    //             clearInterval(this.interval);
+    //         }
+    //     }, 100);
+    // }
+
+    updateTargetPE(pe) {
+        this.targetPE = pe;
     }
 
     async estimateFrame() {
         try {
-            this.pose = await gNet.estimateSinglePose(
+            //console.log(this.net, this.frame);
+
+            this.pose = await this.net.estimateSinglePose(
                 this.frame,
                 0.5,
                 false,
                 16
             );
-
+            //console.log(this.pose);
+            if (!this.isLoaded) {
+                console.log('not loaded');
+                this.isLoaded = true;
+                this.notifyToListener('loadComplete', null);
+                // console.log('listener', this.listener);
+                // if (this.listener) {
+                //     this.listener('loadComplete', null);
+                // }
+                // listener ( loadComplete )
+            }
             this.updateKeyPoint();
             this.updateKeyVector();
+            PoseMatch.getInstance()
+                .getViewManager()
+                .setKeyPoints(this.name, this.getKeyPoint());
 
-            if (!this.isEstimated) {
-                this.isEstimated = true;
-            }
+            // if (!this.isEstimated) {
+            //     this.isEstimated = true;
+            // }
 
-            if (this.enableDrawSkeleton) {
-                PoseMatch.getInstance()
-                    .getViewManager().setKeyPoints(this.name, this.getKeyPoint());
-            }
+            // if (this.enableDrawSkeleton) {
+            //     PoseMatch.getInstance()
+            //         .getViewManager()
+            //         .setKeyPoints(this.name, this.getKeyPoint());
+            // }
 
             if (this.enableCalcScore) {
                 this.calcScore();
             }
         } catch {
-            console.log('Error loading pose estimation');
+            console.log(this.name + 'Error loading pose estimation');
         }
     }
 
@@ -127,24 +162,30 @@ class PoseEstimation {
     }
 
     calcScore() {
-        if (this.frame.id != 'localvideo') return;
+        if (this.pe == null) return;
+        this.score = this.calcCosSim(this.targetPE.getKeyVector());
 
-        let displayScore = document.getElementById('localScore');
-        let startTime = 3;
-        let intervalTime = 3;
-        let curTime = PoseMatch.getInstance().getTimer().index;
+        this.notifyToListener('updateScore', score);
 
-        if (
-            curTime >= startTime &&
-            curTime < startTime + intervalTime * targetSize
-        ) {
-            let curIdx = Math.floor((curTime - startTime) / intervalTime);
-            displayScore.innerText = this.calcCosSim(
-                gTargetPose[curIdx].getKeyVector()
-            );
-        } else {
-            displayScore.innerText = '##.#%';
-        }
+        // listener( onUpdatedScore (score))
+
+        //    if (this.frame.id != 'localvideo') return;
+        //        let displayScore = document.getElementById('localScore');
+        // let startTime = 3;
+        // let intervalTime = 3;
+        // // let curTime = PoseMatch.getInstance().getTimer().index;
+
+        // if (
+        //     curTime >= startTime &&
+        //     curTime < startTime + intervalTime * targetSize
+        // ) {
+        //     let curIdx = Math.floor((curTime - startTime) / intervalTime);
+        //     displayScore.innerText = this.calcCosSim(
+        //         this.targetPE.getKeyVector()
+        //     );
+        // } else {
+        //     displayScore.innerText = '##.#%';
+        // }
     }
 
     calcCosSim(vec) {
@@ -164,6 +205,6 @@ class PoseEstimation {
         let num = sum / 12;
         num *= 100;
 
-        return num.toFixed(2).toString() + ' %';
+        return num.toFixed(2);
     }
 }

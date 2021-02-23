@@ -5,7 +5,7 @@ class UserData {
         this.state = 'notReady';
         this.score = [];
         var i;
-        for (i=0; i < GAME_STAGE_COUNT; i++) {
+        for (i = 0; i < GAME_STAGE_COUNT; i++) {
             this.score[i] = 0;
         }
     }
@@ -45,7 +45,7 @@ class PoseMatchServer {
                 if (data.score != undefined) {
                     let userData = this.dataMap.get(data.name);
                     userData.score = data.score.split(',');
-                    this.notifyToListener('updateScore');
+                    //this.notifyToListener('updateRemoteScore');
                 }
             });
         });
@@ -53,7 +53,7 @@ class PoseMatchServer {
 
     addUser(userId) {
         this.dataMap.set(userId, new UserData());
-        //console.log('[POSE] add user', this.dataMap);    
+        //console.log('[POSE] add user', this.dataMap);
     }
 
     async setState(state) {
@@ -70,7 +70,7 @@ class PoseMatchServer {
     async setScore(gameNumber, score) {
         let data = this.dataMap.get(this.user);
         data.score[gameNumber] = score;
-        
+
         this.userRef = this.userCollection.doc(this.user);
         this.userRef.set(
             {

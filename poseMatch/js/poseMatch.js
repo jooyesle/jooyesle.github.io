@@ -3,7 +3,7 @@ var gPoseMatch = null;
 class PoseData {
     constructor(cmd, imgPath) {
         this.cmd = cmd;
-        this.img = new Image();
+        this.img = new Image(320, 240);
         if (imgPath != null) this.img.src = imgPath;
     }
 }
@@ -30,9 +30,12 @@ class PoseMatch {
             this.data
         );
         this.state = 'notReady';
+
+        this.peManager = new PoseEstimationManager(this.data);
     }
 
     init(user, userCollection) {
+        this.user = user;
         let myCanvas = document.querySelector('#PoseEstimation');
         this.viewManager.setMyName(user);
         this.viewManager.addUserView(user, myCanvas);
@@ -52,23 +55,55 @@ class PoseMatch {
 
             let state = PoseMatch.getInstance().state;
             if (cmd == 'ready') {
-                PoseMatch.getInstance().getViewManager().setState('ready', data);
+                PoseMatch.getInstance()
+                    .getViewManager()
+                    .setState('ready', data);
             } else if (cmd == 'readyAll') {
                 state = 'readyAll';
                 PoseMatch.getInstance().getTimer().start();
                 PoseMatch.getInstance().getViewManager().setState(state, null);
+            } else if (cmd == 'posenetLoaded') {
+                console.log('posenetLoaded');
+                PoseMatch.getInstance()
+                    .getPEManager()
+                    .createVideoPose(
+                        'localvideo',
+                        PoseMatch.getInstance().user,
+                        true
+                    );
+                PoseMatch.getInstance()
+                    .getPEManager()
+                    .setPEListener(
+                        'localvideo',
+                        PoseMatch.getInstance().listener
+                    );
             } else if (cmd.indexOf('pose') >= 0) {
                 state = 'playing';
                 PoseMatch.getInstance().getViewManager().setState(state, cmd);
+                if (cmd == 'pose1') PoseMatch.getInstance().poseNumber = 0;
+                else if (cmd == 'pose2') PoseMatch.getInstance().poseNumber = 1;
+                else if (cmd == 'pose3') PoseMatch.getInstance().poseNumber = 2;
+            } else if (cmd == 'updateRemoteScore') {
+                PoseMatch.getInstance()
+                    .getViewManager()
+                    .setScoreData(
+                        PoseMatch.getInstance().getServer().user,
+                        PoseMatch.getInstance().getServer().dataMap
+                    );
             } else if (cmd == 'updateScore') {
-                PoseMatch.getInstance().getViewManager().setScoreData(
-                    PoseMatch.getInstance().getServer().user,
-                    PoseMatch.getInstance().getServer().dataMap);
+                PoseMatch.getInstance()
+                    .getServer()
+                    .setScore(PoseMatch.getInstance().poseNumber, data);
+            } else if (cmd == 'loadComplete') {
+                console.log('loadComplete');
+                PoseMatch.getInstance().enableReadyButton();
             }
         };
 
         this.server.addListener(this.listener);
         this.poseTimer.addListener(this.listener);
+        this.peManager.addListener(this.listener);
+        this.peManager.init();
     }
 
     static getInstance() {
@@ -88,5 +123,13 @@ class PoseMatch {
 
     getViewManager() {
         return this.viewManager;
+    }
+
+    getPEManager() {
+        return this.peManager;
+    }
+
+    enableReadyButton() {
+        document.getElementById('readyButton').disabled = false;
     }
 }

@@ -192,8 +192,9 @@ Connection.prototype.addRemoteStream = function (index, peer) {
 
     console.log('addRemoteStream: remotemonitor id', canvas.id);
     PoseMatch.getInstance().getViewManager().addUserView(peer, gameview);
-
-    createVideoPose(video.id, peer);
+    PoseMatch.getInstance()
+        .getPEManager()
+        .createVideoPose(video.id, peer, false);
 };
 
 Connection.prototype.startOffer = async function () {

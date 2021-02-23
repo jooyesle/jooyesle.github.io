@@ -5,24 +5,8 @@ class GameView {
 
     draw(img) {
         let ctx = this.canvas.getContext('2d');
-        var hRatio = this.canvas.width / img.width;
-        var vRatio = this.canvas.height / img.height;
-        var ratio = Math.min(hRatio, vRatio);
-        var centerShift_x = (this.canvas.width - img.width * ratio) / 2;
-        var centerShift_y = (this.canvas.height - img.height * ratio) / 2;
-
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        ctx.drawImage(
-            img,
-            0,
-            0,
-            img.width,
-            img.height,
-            centerShift_x,
-            centerShift_y,
-            img.width * ratio,
-            img.height * ratio
-        );
+        ctx.drawImage(img, 0, 0, img.width, img.height);
     }
 
     clear() {
@@ -72,20 +56,18 @@ class UserView {
     }
 
     drawText(ctx) {
-        if (this.text == null)
-            return;
+        if (this.text == null) return;
         ctx.font = 'bold 20px Courier';
-        ctx.fillStyle = "red";
-        ctx.textAlign = "center";
+        ctx.fillStyle = 'red';
+        ctx.textAlign = 'center';
         ctx.fillText(this.text, this.canvas.width / 2, 25);
     }
 
     drawScore(ctx) {
-        if (this.dataMap == null)
-            return;
+        if (this.dataMap == null) return;
         ctx.font = 'bold 12px Courier';
-        ctx.fillStyle = "red";
-        ctx.textAlign = 'left'
+        ctx.fillStyle = 'red';
+        ctx.textAlign = 'left';
         let x = 5;
         let y = this.canvas.height / 6;
         this.dataMap.forEach((value, key, map) => {
@@ -96,8 +78,7 @@ class UserView {
     }
 
     drawSkeleton(ctx) {
-        if (this.keyPoints == null)
-            return;
+        if (this.keyPoints == null) return;
 
         let w = 5;
         let h = 5;
@@ -146,11 +127,13 @@ class PoseMatchViewManager {
         this.viewMap = new Map();
         this.gameView = new GameView(gameCanvas);
 
-        this.timerId = setInterval(function (viewer) {
-            viewer.draw();
-        },
+        this.timerId = setInterval(
+            function (viewer) {
+                viewer.draw();
+            },
             250,
-            this);
+            this
+        );
     }
 
     setMyName(name) {
@@ -181,8 +164,7 @@ class PoseMatchViewManager {
     }
 
     setState(state, data) {
-        if (this.state == state && this.stateData == data)
-            return;
+        if (this.state == state && this.stateData == data) return;
 
         if (state == 'ready') {
             this.viewMap.get(data).setText('Ready');
