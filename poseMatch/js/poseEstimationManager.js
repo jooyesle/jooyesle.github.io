@@ -16,16 +16,15 @@ const skeleton = [
 
 class PoseEstimationManager {
     constructor(data) {
-        this.targetPoses = [];
+        this.targetPoses = new Map();
         this.videoPoses = new Map();
         this.data = data;
         this.listener = null;
     }
 
     notifyToListener(cmd, data) {
-        var msg = [cmd, data];
         if (this.listener != null) {
-            this.listener(msg);
+            this.listener(cmd, data);
         }
     }
 
@@ -50,13 +49,12 @@ class PoseEstimationManager {
                 }*/
                 let pe = new PoseEstimation(this.net, false);
                 pe.init(value.img, key);
-                this.targetPoses.push(pe);
+                this.targetPoses.set(value.cmd, pe);
             }
         });
     }
 
     createVideoPose(videoId, userName, enableCalcScore) {
-        console.log('createvp:', videoId, userName);
         let vidPose = new PoseEstimation(this.net, enableCalcScore);
         let video = document.getElementById(videoId);
         this.videoPoses.set(videoId, vidPose);
@@ -73,8 +71,18 @@ class PoseEstimationManager {
     }
 
     setPEListener(name, listener) {
-        console.log(this.videoPoses);
         this.videoPoses.get(name).setListener(listener);
+    }
+
+    updateTargetPE(name, pose) {
+        console.log('Update Target PE:', name, pose);
+        this.videoPoses.get(name).updateTargetPE(this.targetPoses.get(pose));
+    }
+
+    stop() {
+        this.videoPoses.forEach((value, key, map) => {
+            value.stop();
+        });
     }
 }
 

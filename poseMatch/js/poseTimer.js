@@ -11,10 +11,8 @@ class PoseTimer {
     }
 
     notifyToListener(cmd, data) {
-        var msg = [cmd, data];
-        //console.log('notification:', msg);
         this.listeners.forEach((listener) => {
-            listener(msg);
+            listener(cmd, data);
         });
     }
 
@@ -22,17 +20,21 @@ class PoseTimer {
         if (this.timerId) {
             return;
         }
-        console.log('[POSE] start timer');
-        this.timerId = setInterval(            
+        console.log('Start PoseTimer');
+        this.timerId = setInterval(
             function (poseTimer) {
                 if (poseTimer.data.has(poseTimer.index)) {
+                    poseTimer.notifyToListener(
+                        poseTimer.data.get(poseTimer.index).cmd,
+                        null
+                    );
                     if (poseTimer.data.get(poseTimer.index).cmd == 'stop') {
                         poseTimer.stop();
                         return;
                     }
-                    //console.log(poseTimer.data.get(poseTimer.index));
-                    poseTimer.targetView.draw(poseTimer.data.get(poseTimer.index).img);
-                    poseTimer.notifyToListener(poseTimer.data.get(poseTimer.index).cmd, null);
+                    poseTimer.targetView.draw(
+                        poseTimer.data.get(poseTimer.index).img
+                    );
                 }
                 poseTimer.index += 1;
             },
@@ -42,7 +44,7 @@ class PoseTimer {
     }
 
     stop() {
-        console.log('[POSE] stop timer:', this.timerId);
+        console.log('Stop PoseTimer:', this.timerId);
         clearInterval(this.timerId);
         this.targetView.clear();
     }

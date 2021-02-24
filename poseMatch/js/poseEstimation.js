@@ -15,16 +15,14 @@ class PoseEstimation {
     }
 
     init(frame, name) {
-        console.log('init');
         this.frame = frame;
         this.name = name;
-        this.startup();
+        this.start();
     }
 
     notifyToListener(cmd, data) {
-        var msg = [cmd, data];
         if (this.listener != null) {
-            this.listener(msg);
+            this.listener(cmd, data);
         } else {
             console.log('listener error : cmd was ' + cmd);
         }
@@ -34,9 +32,8 @@ class PoseEstimation {
         this.listener = listener;
     }
 
-    async startup() {
+    async start() {
         if (this.interval != null) return;
-
         if (this.frame instanceof HTMLVideoElement) {
             this.interval = setInterval(async () => {
                 if (this.frame.readyState == HAVE_ENOUGH_DATA) {
@@ -45,7 +42,7 @@ class PoseEstimation {
                     if (!this.isLoaded) {
                         console.log('This is the first load for ' + this.name);
                         this.isLoaded = true;
-                        this.notifyToListener('loadComplete', null);
+                        this.notifyToListener('peLoaded', null);
                     }
 
                     PoseMatch.getInstance()
@@ -60,11 +57,11 @@ class PoseEstimation {
             }, 100);
         } else {
             await this.estimateFrame();
-            console.log(this.pose);
+            //console.log(this.pose);
         }
     }
 
-    shutdown() {
+    stop() {
         clearInterval(this.interval);
     }
 
@@ -117,30 +114,9 @@ class PoseEstimation {
     }
 
     calcScore() {
-        if (this.pe == null) return;
+        if (this.targetPE == null) return;
         this.score = this.calcCosSim(this.targetPE.getKeyVector());
-
-        this.notifyToListener('updateScore', score);
-
-        // listener( onUpdatedScore (score))
-
-        //    if (this.frame.id != 'localvideo') return;
-        //        let displayScore = document.getElementById('localScore');
-        // let startTime = 3;
-        // let intervalTime = 3;
-        // // let curTime = PoseMatch.getInstance().getTimer().index;
-
-        // if (
-        //     curTime >= startTime &&
-        //     curTime < startTime + intervalTime * targetSize
-        // ) {
-        //     let curIdx = Math.floor((curTime - startTime) / intervalTime);
-        //     displayScore.innerText = this.calcCosSim(
-        //         this.targetPE.getKeyVector()
-        //     );
-        // } else {
-        //     displayScore.innerText = '##.#%';
-        // }
+        this.notifyToListener('updateScore', this.score);
     }
 
     calcCosSim(vec) {

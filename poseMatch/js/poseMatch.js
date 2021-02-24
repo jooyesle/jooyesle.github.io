@@ -10,6 +10,8 @@ class PoseData {
 
 class PoseMatch {
     constructor() {
+        this.state = 'notReady';
+        this.currentScore = null;
         this.data = new Map();
         this.data.set(0, new PoseData('countdown3', '/poseMatch/images/3.png'));
         this.data.set(1, new PoseData('countdown2', '/poseMatch/images/2.png'));
@@ -25,13 +27,11 @@ class PoseMatch {
         this.server = new PoseMatchServer();
         let gameCanvas = document.querySelector('#game');
         this.viewManager = new PoseMatchViewManager(gameCanvas);
+        this.peManager = new PoseEstimationManager(this.data);
         this.poseTimer = new PoseTimer(
             this.viewManager.getGameView(),
             this.data
         );
-        this.state = 'notReady';
-
-        this.peManager = new PoseEstimationManager(this.data);
     }
 
     init(user, userCollection) {
@@ -48,22 +48,70 @@ class PoseMatch {
             PoseMatch.getInstance().getServer().setState('ready');
         });
 
-        this.listener = function (msg) {
-            let cmd = msg[0];
-            let data = msg[1];
-            console.log('command:', cmd);
-
-            let state = PoseMatch.getInstance().state;
+        this.server.addListener(function (cmd, data) {
+            console.log('[ServerListener]', cmd, data);
             if (cmd == 'ready') {
                 PoseMatch.getInstance()
                     .getViewManager()
                     .setState('ready', data);
             } else if (cmd == 'readyAll') {
-                state = 'readyAll';
                 PoseMatch.getInstance().getTimer().start();
-                PoseMatch.getInstance().getViewManager().setState(state, null);
-            } else if (cmd == 'posenetLoaded') {
-                console.log('posenetLoaded');
+                PoseMatch.getInstance()
+                    .getViewManager()
+                    .setState('readyAll', data);
+            } else if (cmd == 'updateRemoteScore') {
+                PoseMatch.getInstance()
+                    .getViewManager()
+                    .setScoreData(
+                        PoseMatch.getInstance().getServer().user,
+                        PoseMatch.getInstance().getServer().dataMap
+                    );
+            }
+        });
+
+        this.poseTimer.addListener(function (cmd, data) {
+            console.log('[PoseTimerListener]', cmd, data);
+            if (cmd.indexOf('pose') >= 0) {
+                PoseMatch.getInstance()
+                    .getViewManager()
+                    .setState('playing', cmd);
+                PoseMatch.getInstance()
+                    .getPEManager()
+                    .updateTargetPE('localvideo', cmd);
+            } else if (cmd == 'stop') {
+                PoseMatch.getInstance().getViewManager().setState('stop', cmd);
+                PoseMatch.getInstance().getPEManager().stop();
+            }
+
+            if (cmd == 'pose2') {
+                PoseMatch.getInstance()
+                    .getServer()
+                    .setScore(0, PoseMatch.getInstance().currentScore);
+            } else if (cmd == 'pose3') {
+                PoseMatch.getInstance()
+                    .getServer()
+                    .setScore(1, PoseMatch.getInstance().currentScore);
+            } else if (cmd == 'stop') {
+                PoseMatch.getInstance()
+                    .getServer()
+                    .setScore(2, PoseMatch.getInstance().currentScore);
+            }
+        });
+
+        let peListener = function (cmd, data) {
+            if (cmd == 'peLoaded') {
+                console.log('[PEListener]', cmd, data);
+                PoseMatch.getInstance().enableReadyButton();
+            } else if (cmd == 'updateScore') {
+                let displayScore = document.getElementById('localScore');
+                displayScore.innerText = data;
+                PoseMatch.getInstance().currentScore = data;
+            }
+        };
+
+        this.peManager.addListener(function (cmd, data) {
+            console.log('[PEManagerListener]', cmd, data);
+            if (cmd == 'posenetLoaded') {
                 PoseMatch.getInstance()
                     .getPEManager()
                     .createVideoPose(
@@ -73,36 +121,9 @@ class PoseMatch {
                     );
                 PoseMatch.getInstance()
                     .getPEManager()
-                    .setPEListener(
-                        'localvideo',
-                        PoseMatch.getInstance().listener
-                    );
-            } else if (cmd.indexOf('pose') >= 0) {
-                state = 'playing';
-                PoseMatch.getInstance().getViewManager().setState(state, cmd);
-                if (cmd == 'pose1') PoseMatch.getInstance().poseNumber = 0;
-                else if (cmd == 'pose2') PoseMatch.getInstance().poseNumber = 1;
-                else if (cmd == 'pose3') PoseMatch.getInstance().poseNumber = 2;
-            } else if (cmd == 'updateRemoteScore') {
-                PoseMatch.getInstance()
-                    .getViewManager()
-                    .setScoreData(
-                        PoseMatch.getInstance().getServer().user,
-                        PoseMatch.getInstance().getServer().dataMap
-                    );
-            } else if (cmd == 'updateScore') {
-                PoseMatch.getInstance()
-                    .getServer()
-                    .setScore(PoseMatch.getInstance().poseNumber, data);
-            } else if (cmd == 'loadComplete') {
-                console.log('loadComplete');
-                PoseMatch.getInstance().enableReadyButton();
+                    .setPEListener('localvideo', peListener);
             }
-        };
-
-        this.server.addListener(this.listener);
-        this.poseTimer.addListener(this.listener);
-        this.peManager.addListener(this.listener);
+        });
         this.peManager.init();
     }
 

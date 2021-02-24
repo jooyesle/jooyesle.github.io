@@ -24,6 +24,7 @@ class PoseMatchServer {
         this.listeners = [];
         this.userCollection = null;
         this.dataMap = new Map();
+        this.readyAll = false;
     }
 
     async init(user, userCollection) {
@@ -37,7 +38,7 @@ class PoseMatchServer {
                 if (change.type === 'added' && data.name != this.user) {
                     this.addUser(data.name);
                 }
-                console.log('[POSE] changed data: ', data);
+                console.log('Changed Data: ', data);
                 if (data.state != undefined) {
                     this.dataMap.get(data.name)['state'] = data.state;
                     this.checkReadyAllUsers();
@@ -45,7 +46,12 @@ class PoseMatchServer {
                 if (data.score != undefined) {
                     let userData = this.dataMap.get(data.name);
                     userData.score = data.score.split(',');
-                    //this.notifyToListener('updateRemoteScore');
+                    // console.log(
+                    //     'update remote score:',
+                    //     userData.score,
+                    //     data.score
+                    // );
+                    this.notifyToListener('updateRemoteScore', null);
                 }
             });
         });
@@ -53,7 +59,7 @@ class PoseMatchServer {
 
     addUser(userId) {
         this.dataMap.set(userId, new UserData());
-        //console.log('[POSE] add user', this.dataMap);
+        //console.log('Add User:', this.dataMap);
     }
 
     async setState(state) {
@@ -86,18 +92,19 @@ class PoseMatchServer {
     }
 
     notifyToListener(cmd, data) {
-        var msg = [cmd, data];
-        //console.log('notification:', msg);
         this.listeners.forEach((listener) => {
-            listener(msg);
+            listener(cmd, data);
         });
     }
 
     checkReadyAllUsers() {
-        //console.log('[POSE] checkReadyAllUsers', this.dataMap);
+        //console.log('CheckReadyAllUsers:', this.dataMap);
+        if (this.readyAll) {
+            return;
+        }
         var readyAll = true;
         this.dataMap.forEach((value, key, map) => {
-            console.log('[POSE] check user ready', key, value.state);
+            console.log('Check Ready:', key, value.state);
             if (value.state != 'ready') {
                 readyAll = false;
             } else {
@@ -106,6 +113,7 @@ class PoseMatchServer {
         });
 
         if (readyAll == true) {
+            this.readyAll = true;
             this.notifyToListener('readyAll', null);
         }
     }

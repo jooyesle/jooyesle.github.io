@@ -52,6 +52,8 @@ class UserView {
         if (state == 'playing') {
             this.drawScore(ctx);
             this.drawSkeleton(ctx);
+        } else if (state == 'stop') {
+            this.drawResult(ctx);
         }
     }
 
@@ -63,16 +65,49 @@ class UserView {
         ctx.fillText(this.text, this.canvas.width / 2, 25);
     }
 
+    drawResult(ctx) {
+        if (this.dataMap == null) {
+            return;
+        }
+        ctx.font = 'bold 14px Courier';
+        ctx.fillStyle = 'red';
+        ctx.textAlign = 'start';
+        let x = this.canvas.width / 2 - 50;
+        let y = 50;
+
+        this.dataMap.forEach((value, key, map) => {
+            ctx.fillText('[' + key + ']', x, y);
+            let pose = 1;
+            value.score.forEach((score) => {
+                let text = pose.toString() + ':' + score;
+                ctx.fillText(text, x, y + 14);
+                y += 14;
+                pose++;
+            });
+            y += 20;
+        });
+    }
+
     drawScore(ctx) {
-        if (this.dataMap == null) return;
+        if (this.dataMap == null) {
+            console.log('skip draw score');
+            return;
+        }
         ctx.font = 'bold 12px Courier';
         ctx.fillStyle = 'red';
         ctx.textAlign = 'left';
         let x = 5;
         let y = this.canvas.height / 6;
+
         this.dataMap.forEach((value, key, map) => {
-            ctx.fillText(key, x, y);
-            ctx.fillText(value.score.toString(), x, y + 12);
+            ctx.fillText('[' + key + ']', x, y);
+            let pose = 1;
+            value.score.forEach((score) => {
+                let text = pose.toString() + ':' + score;
+                ctx.fillText(text, x, y + 12);
+                y += 12;
+                pose++;
+            });
             y += 30;
         });
     }
@@ -164,17 +199,21 @@ class PoseMatchViewManager {
     }
 
     setState(state, data) {
-        if (this.state == state && this.stateData == data) return;
+        if (this.state == state) return;
 
         if (state == 'ready') {
             this.viewMap.get(data).setText('Ready');
+            return;
         } else if (state == 'readyAll') {
             this.clearAll();
         } else if (state == 'playing') {
             this.getMyUserView().setText(data);
+        } else if (state == 'stop') {
+            this.getMyUserView().setText('Result');
         }
+
         this.state = state;
-        this.stateData = data;
+        console.log('Viewer State:', this.state);
     }
 
     setScoreData(name, dataMap) {
