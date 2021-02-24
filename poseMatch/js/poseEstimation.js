@@ -6,11 +6,9 @@ class PoseEstimation {
         this.keyPoint = new Array(17);
         this.keyVector = new Array(12);
         this.pose = null;
-        //this.isEstimated = false;
-        //this.enableDrawSkeleton = false;
-        this.interval = null; // only when video
-        this.score = 0.0; // true only when localVideo
-        this.enableCalcScore = enableCalcScore; // true only when localVideo
+        this.interval = null;
+        this.score = 0.0;
+        this.enableCalcScore = enableCalcScore;
         this.targetPE = null;
         this.listener = null;
         this.isLoaded = false;
@@ -20,11 +18,6 @@ class PoseEstimation {
         console.log('init');
         this.frame = frame;
         this.name = name;
-        // if (this.frame instanceof HTMLVideoElement) {
-        //     this.estimateVideo();
-        // } else if (this.frame instanceof HTMLImageElement) {
-        //     this.estimateFrame();
-        // }
         this.startup();
     }
 
@@ -33,7 +26,7 @@ class PoseEstimation {
         if (this.listener != null) {
             this.listener(msg);
         } else {
-            console.log('listener error');
+            console.log('listener error : cmd was ' + cmd);
         }
     }
 
@@ -42,17 +35,32 @@ class PoseEstimation {
     }
 
     async startup() {
-        //if (this.interval != null) return;
-        //console.log('startup');
+        if (this.interval != null) return;
+
         if (this.frame instanceof HTMLVideoElement) {
             this.interval = setInterval(async () => {
                 if (this.frame.readyState == HAVE_ENOUGH_DATA) {
-                    //console.log('startup video');
                     await this.estimateFrame();
+
+                    if (!this.isLoaded) {
+                        console.log('This is the first load for ' + this.name);
+                        this.isLoaded = true;
+                        this.notifyToListener('loadComplete', null);
+                    }
+
+                    PoseMatch.getInstance()
+                        .getViewManager()
+                        .getUserView(this.name)
+                        .setKeyPoints(this.getKeyPoint());
+
+                    if (this.enableCalcScore) {
+                        this.calcScore();
+                    }
                 }
             }, 100);
         } else {
             await this.estimateFrame();
+            console.log(this.pose);
         }
     }
 
@@ -60,60 +68,21 @@ class PoseEstimation {
         clearInterval(this.interval);
     }
 
-    // estimateVideo() {
-    //     this.interval = setInterval(async () => {
-    //         if (this.frame.readyState == HAVE_ENOUGH_DATA) {
-    //             await this.estimateFrame();
-    //         } else {
-    //             clearInterval(this.interval);
-    //         }
-    //     }, 100);
-    // }
-
     updateTargetPE(pe) {
         this.targetPE = pe;
     }
 
     async estimateFrame() {
         try {
-            //console.log(this.net, this.frame);
-
             this.pose = await this.net.estimateSinglePose(
                 this.frame,
                 0.5,
                 false,
                 16
             );
-            //console.log(this.pose);
-            if (!this.isLoaded) {
-                console.log('not loaded');
-                this.isLoaded = true;
-                this.notifyToListener('loadComplete', null);
-                // console.log('listener', this.listener);
-                // if (this.listener) {
-                //     this.listener('loadComplete', null);
-                // }
-                // listener ( loadComplete )
-            }
+
             this.updateKeyPoint();
             this.updateKeyVector();
-            PoseMatch.getInstance()
-                .getViewManager()
-                .setKeyPoints(this.name, this.getKeyPoint());
-
-            // if (!this.isEstimated) {
-            //     this.isEstimated = true;
-            // }
-
-            // if (this.enableDrawSkeleton) {
-            //     PoseMatch.getInstance()
-            //         .getViewManager()
-            //         .setKeyPoints(this.name, this.getKeyPoint());
-            // }
-
-            if (this.enableCalcScore) {
-                this.calcScore();
-            }
         } catch {
             console.log(this.name + 'Error loading pose estimation');
         }
@@ -134,31 +103,17 @@ class PoseEstimation {
                     this.keyPoint[skeleton[i][0]][0],
                 this.keyPoint[skeleton[i][1]][1] -
                     this.keyPoint[skeleton[i][0]][1],
+                0.0,
             ];
         }
     }
 
-    getName() {
-        return this.name;
-    }
     getKeyVector() {
         return this.keyVector;
     }
 
     getKeyPoint() {
         return this.keyPoint;
-    }
-
-    getIsEstimated() {
-        return this.isEstimated;
-    }
-
-    setEnableCalcScore(isEnabled) {
-        this.enableCalcScore = isEnabled;
-    }
-
-    setEnableDrawSkeleton(isEnabled) {
-        this.enableDrawSkeleton = isEnabled;
     }
 
     calcScore() {
@@ -200,11 +155,13 @@ class PoseEstimation {
             );
             let magB = Math.sqrt(vec[i][0] * vec[i][0] + vec[i][1] * vec[i][1]);
 
-            sum += dotProduct / (magA * magB);
+            this.keyVector[i][2] = dotProduct / (magA * magB);
+            sum += this.keyVector[i][2];
         }
-        let num = sum / 12;
-        num *= 100;
 
-        return num.toFixed(2);
+        let avgCosSim = sum / 12;
+        avgCosSim *= 100;
+
+        return avgCosSim.toFixed(2);
     }
 }
