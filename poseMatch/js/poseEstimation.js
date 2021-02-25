@@ -45,10 +45,12 @@ class PoseEstimation {
                         this.notifyToListener('peLoaded', null);
                     }
 
-                    PoseMatch.getInstance()
+                    let userView = PoseMatch.getInstance()
                         .getViewManager()
-                        .getUserView(this.name)
-                        .setKeyPoints(this.getKeyPoint());
+                        .getUserView(this.name);
+
+                    userView.setKeyPoints(this.getKeyPoint());
+                    userView.setKeyVectors(this.getKeyVector());
 
                     if (this.enableCalcScore) {
                         this.calcScore();
@@ -57,7 +59,6 @@ class PoseEstimation {
             }, 100);
         } else {
             await this.estimateFrame();
-            //console.log(this.pose);
         }
     }
 

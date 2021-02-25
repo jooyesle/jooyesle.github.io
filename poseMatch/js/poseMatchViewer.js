@@ -21,6 +21,8 @@ class UserView {
         this.canvas = canvas;
         this.text = 'push ready button!!';
         this.state = 'init';
+        this.keyPoints = null;
+        this.keyVectors = null;
     }
 
     setText(text) {
@@ -39,6 +41,10 @@ class UserView {
 
     setKeyPoints(keyPoints) {
         this.keyPoints = keyPoints;
+    }
+
+    setKeyVectors(keyVectors) {
+        this.keyVectors = keyVectors;
     }
 
     draw(state) {
@@ -113,28 +119,50 @@ class UserView {
     }
 
     drawSkeleton(ctx) {
-        if (this.keyPoints == null) return;
+        if (this.keyPoints == null || this.keyVectors == null) return;
 
         let w = 5;
         let h = 5;
-
+        let threshold = 0.86602540378; // +-30 deg
+        // good posture
         ctx.beginPath();
-        for (let i = 0; i < skeleton.length; i++) {
-            ctx.moveTo(
-                this.keyPoints[skeleton[i][0]][0],
-                this.keyPoints[skeleton[i][0]][1]
-            );
-            ctx.lineTo(
-                this.keyPoints[skeleton[i][1]][0],
-                this.keyPoints[skeleton[i][1]][1]
-            );
-        }
         ctx.lineWidth = 3;
-        ctx.strokeStyle = 'rgb(66, 135, 245)';
+        ctx.strokeStyle = '#74C7B8';
+        for (let i = 0; i < skeleton.length; i++) {
+            if (this.keyVectors[i][2] >= threshold) {
+                ctx.moveTo(
+                    this.keyPoints[skeleton[i][0]][0],
+                    this.keyPoints[skeleton[i][0]][1]
+                );
+                ctx.lineTo(
+                    this.keyPoints[skeleton[i][1]][0],
+                    this.keyPoints[skeleton[i][1]][1]
+                );
+            }
+        }
         ctx.stroke();
         ctx.closePath();
 
-        ctx.fillStyle = 'rgb(255, 102, 0)';
+        // bad posture
+        ctx.beginPath();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#EF4F4F';
+        for (let i = 0; i < skeleton.length; i++) {
+            if (this.keyVectors[i][2] < threshold) {
+                ctx.moveTo(
+                    this.keyPoints[skeleton[i][0]][0],
+                    this.keyPoints[skeleton[i][0]][1]
+                );
+                ctx.lineTo(
+                    this.keyPoints[skeleton[i][1]][0],
+                    this.keyPoints[skeleton[i][1]][1]
+                );
+            }
+        }
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.fillStyle = '#FFCDA3';
         for (let i = 0; i < this.keyPoints.length; i++) {
             ctx.beginPath();
             ctx.ellipse(

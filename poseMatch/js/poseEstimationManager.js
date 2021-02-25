@@ -43,10 +43,6 @@ class PoseEstimationManager {
     async createTargetPoses() {
         this.data.forEach((value, key, map) => {
             if (value.cmd.indexOf('pose') >= 0) {
-                /*if (!value.img.complete) {
-                    console.log('Target image is not loaded');
-                    return;
-                }*/
                 let pe = new PoseEstimation(this.net, false);
                 pe.init(value.img, key);
                 this.targetPoses.set(value.cmd, pe);
@@ -57,6 +53,9 @@ class PoseEstimationManager {
     createVideoPose(videoId, userName, enableCalcScore) {
         let vidPose = new PoseEstimation(this.net, enableCalcScore);
         let video = document.getElementById(videoId);
+        video.width = 320;
+        video.height = 240;
+
         this.videoPoses.set(videoId, vidPose);
 
         video.addEventListener('playing', function () {
