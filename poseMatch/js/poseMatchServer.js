@@ -4,9 +4,13 @@ class UserData {
     constructor() {
         this.state = 'notReady';
         this.score = [];
+        this.imgUrl = [];
         var i;
         for (i = 0; i < GAME_STAGE_COUNT; i++) {
             this.score[i] = 0;
+        }
+        for (i = 0; i < GAME_STAGE_COUNT; i++) {
+            this.imgUrl[i] = '';
         }
     }
 
@@ -25,6 +29,7 @@ class PoseMatchServer {
         this.userCollection = null;
         this.dataMap = new Map();
         this.readyAll = false;
+        this.displayed = false;
     }
 
     async init(user, userCollection) {
@@ -52,6 +57,15 @@ class PoseMatchServer {
                     //     data.score
                     // );
                     this.notifyToListener('updateRemoteScore', null);
+                }
+                if (data.imgUrl != undefined) {
+                    console.log('ABCD', data.name, data.imgUrl);
+                    this.dataMap.get(data.name)['imgUrl'] = data.imgUrl;
+                    let isDone = true;
+                    this.dataMap.forEach((value, key, map) => {
+                        if (value.imgUrl[2] == '') isDone = false; // [2]: last posture
+                    });
+                    if (isDone) this.displayResultAllUsers();
                 }
             });
         });
@@ -93,6 +107,22 @@ class PoseMatchServer {
             {
                 name: this.user,
                 score: '0,0,0',
+                imgUrl: null,
+            },
+            { merge: true }
+        );
+    }
+
+    async setImgUrl(gameNumber, imgUrl) {
+        let data = this.dataMap.get(this.user);
+        data.imgUrl[gameNumber] = imgUrl;
+
+        this.userRef = this.userCollection.doc(this.user);
+        this.userRef.set(
+            {
+                name: this.user,
+                score: '0,0,0',
+                imgUrl: data.imgUrl,
             },
             { merge: true }
         );
@@ -136,5 +166,41 @@ class PoseMatchServer {
             this.resetScore();
             this.notifyToListener('readyAll', null);
         }
+    }
+
+    displayResultAllUsers() {
+        if (this.displayed) return;
+        this.displayed = true;
+        let displayResults = document.getElementById('displayResults');
+        let idx = 0;
+        let resultImgs = [];
+        this.dataMap.forEach((value, key, map) => {
+            let subdiv = document.createElement('div');
+            displayResults.appendChild(subdiv);
+
+            let userName = document.createElement('h2');
+            userName.innerText = key;
+            subdiv.appendChild(userName);
+
+            for (let i in value.imgUrl) {
+                let img = document.createElement('img');
+                img.setAttribute('width', '320');
+                img.setAttribute('height', '240');
+                img.setAttribute('id', 'res' + idx);
+                img.setAttribute('src', value.imgUrl[i]);
+                resultImgs.push(img);
+                subdiv.appendChild(img);
+
+                let canvas = document.createElement('canvas');
+                canvas.setAttribute('width', '320');
+                canvas.setAttribute('height', '240');
+                img.setAttribute('id', 'canvas' + idx);
+                canvas.setAttribute('class', 'resultCanvas');
+                subdiv.appendChild(canvas);
+
+                idx++;
+            }
+        });
+        this.notifyToListener('createResultPose', resultImgs);
     }
 }

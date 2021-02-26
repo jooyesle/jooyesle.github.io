@@ -65,6 +65,13 @@ class PoseEstimationManager {
         });
     }
 
+    createResultPose(imgs) {
+        for (let i in imgs) {
+            //TO DO : draw skeleton with result images
+            console.log('@@@' + imgs[i].src);
+        }
+    }
+
     addListener(listener) {
         this.listener = listener;
     }
@@ -90,7 +97,3 @@ class PoseEstimationManager {
         });
     }
 }
-
-// TO DO : for remote video
-// video.width = 320;
-// video.height = 240;

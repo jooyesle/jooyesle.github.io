@@ -70,6 +70,9 @@ class PoseMatch {
                         PoseMatch.getInstance().getServer().user,
                         PoseMatch.getInstance().getServer().dataMap
                     );
+            } else if (cmd == 'createResultPose') {
+                console.log('Is this called only once?');
+                PoseMatch.getInstance().getPEManager().createResultPose(data);
             }
         });
 
@@ -90,15 +93,18 @@ class PoseMatch {
 
             // TODO: refactoring
             if (cmd == 'pose2') {
+                PoseMatch.getInstance().captureAndSaveImg(0);
                 PoseMatch.getInstance()
                     .getServer()
                     .setScore(0, PoseMatch.getInstance().currentScore);
             } else if (cmd == 'pose3') {
+                PoseMatch.getInstance().captureAndSaveImg(1);
                 PoseMatch.getInstance()
                     .getServer()
                     .setScore(1, PoseMatch.getInstance().currentScore);
             } else if (cmd == 'stop') {
                 PoseMatch.getInstance().getTimer().stop();
+                PoseMatch.getInstance().captureAndSaveImg(2);
                 PoseMatch.getInstance()
                     .getServer()
                     .setScore(2, PoseMatch.getInstance().currentScore);
@@ -170,5 +176,53 @@ class PoseMatch {
     enableReadyButton(enable) {
         console.log('enable ready', enable);
         document.getElementById('readyButton').disabled = !enable;
+    }
+
+    captureAndSaveImg(idx) {
+        let canvas = document.createElement('canvas');
+        let video = document.getElementById('localvideo');
+
+        canvas.width = video.width;
+        canvas.height = video.height;
+
+        canvas
+            .getContext('2d')
+            .drawImage(video, 0, 0, video.width, video.height);
+        let b64str = canvas.toDataURL('imag/png').split(';base64,')[1];
+        b64str = b64str.replace(/\+/g, '%2B');
+
+        let imageHostingRequest = new XMLHttpRequest();
+        imageHostingRequest.open(
+            'POST',
+            'https://api.imgbb.com/1/upload?' +
+                'expiration=60' +
+                '&key=15c781598b3e34982799db6f86a3819f' +
+                '&name=' +
+                PoseMatch.getInstance().user +
+                idx,
+            true
+        );
+        imageHostingRequest.setRequestHeader(
+            'Access-Control-Allow-Origin',
+            '*'
+        );
+        imageHostingRequest.setRequestHeader(
+            'Access-Control-Allow-Methods',
+            'POST'
+        );
+        imageHostingRequest.setRequestHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+
+        imageHostingRequest.send('image=' + b64str);
+
+        imageHostingRequest.onload = function () {
+            let result = JSON.parse(imageHostingRequest.response);
+            //console.log('image_url=' + encodeURI(result.data.url));
+            PoseMatch.getInstance()
+                .getServer()
+                .setImgUrl(idx, encodeURI(result.data.url));
+        };
     }
 }

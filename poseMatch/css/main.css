@@ -90,6 +90,13 @@ button {
     right: 328px;
 } */
 
+.resultCanvas {
+    border: solid 2px white;
+    position: relative;
+    top: 3px;
+    right: 322px;
+}
+
 #localvideo {
     border: solid 2px yellow;
 }
