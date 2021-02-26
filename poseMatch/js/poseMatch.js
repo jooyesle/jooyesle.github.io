@@ -18,12 +18,12 @@ class PoseMatch {
         this.data.set(2, new PoseData('countdown2', '/poseMatch/images/2.png'));
         this.data.set(3, new PoseData('countdown1', '/poseMatch/images/1.png'));
         this.data.set(4, new PoseData('pose1', '/poseMatch/images/tree.jpg'));
-        this.data.set(7, new PoseData('pose2', '/poseMatch/images/lunge.jpg'));
+        this.data.set(9, new PoseData('pose2', '/poseMatch/images/lunge.jpg'));
         this.data.set(
-            10,
+            14,
             new PoseData('pose3', '/poseMatch/images/handstand.jpg')
         );
-        this.data.set(12, new PoseData('stop', null));
+        this.data.set(19, new PoseData('stop', null));
 
         this.server = new PoseMatchServer();
         let gameCanvas = document.querySelector('#game');
