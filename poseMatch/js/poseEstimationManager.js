@@ -78,6 +78,12 @@ class PoseEstimationManager {
         this.videoPoses.get(name).updateTargetPE(this.targetPoses.get(pose));
     }
 
+    start() {
+        this.videoPoses.forEach((value, key, map) => {
+            value.start();
+        });
+    }
+
     stop() {
         this.videoPoses.forEach((value, key, map) => {
             value.stop();

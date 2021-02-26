@@ -227,7 +227,7 @@ class PoseMatchViewManager {
     }
 
     setState(state, data) {
-        if (this.state == state) return;
+        if (this.state == state && this.stateData == data) return;
 
         if (state == 'ready') {
             this.viewMap.get(data).setText('Ready');
@@ -241,6 +241,7 @@ class PoseMatchViewManager {
         }
 
         this.state = state;
+        this.stateData = data;
         console.log('Viewer State:', this.state);
     }
 

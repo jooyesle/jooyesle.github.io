@@ -146,7 +146,7 @@ Connection.prototype.initConnection = async function () {
 };
 
 Connection.prototype.addRemoteStream = function (index, peer) {
-    const videosDiv = document.querySelector('#videos-div');
+    const videosDiv = document.querySelector('#videos-gird-div');
     var canvas = document.createElement('canvas');
     var gameview = document.createElement('canvas');
     var video = document.createElement('video');
@@ -177,7 +177,7 @@ Connection.prototype.addRemoteStream = function (index, peer) {
 
     var remotevideoDiv = document.createElement('div');
     remotevideoDiv.id = `${video.id}-div`;
-    remotevideoDiv.classList.add('grid');
+    remotevideoDiv.classList.add('videoblock');
 
     videosDiv.append(remotevideoDiv);
 

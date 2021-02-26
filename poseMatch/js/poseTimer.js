@@ -1,9 +1,9 @@
 class PoseTimer {
     constructor(targetView, data) {
         this.listeners = [];
+        this.index = 0;
         this.targetView = targetView;
         this.data = data;
-        this.index = 0;
     }
 
     addListener(listener) {
@@ -23,6 +23,7 @@ class PoseTimer {
         console.log('Start PoseTimer');
         this.timerId = setInterval(
             function (poseTimer) {
+                poseTimer.index += 1;
                 if (poseTimer.data.has(poseTimer.index)) {
                     poseTimer.notifyToListener(
                         poseTimer.data.get(poseTimer.index).cmd,
@@ -36,7 +37,6 @@ class PoseTimer {
                         poseTimer.data.get(poseTimer.index).img
                     );
                 }
-                poseTimer.index += 1;
             },
             1000,
             this
@@ -46,6 +46,8 @@ class PoseTimer {
     stop() {
         console.log('Stop PoseTimer:', this.timerId);
         clearInterval(this.timerId);
+        this.timerId = null;
         this.targetView.clear();
+        this.index = 0;
     }
 }

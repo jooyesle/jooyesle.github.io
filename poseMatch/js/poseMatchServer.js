@@ -87,6 +87,17 @@ class PoseMatchServer {
         );
     }
 
+    async resetScore() {
+        this.userRef = this.userCollection.doc(this.user);
+        this.userRef.set(
+            {
+                name: this.user,
+                score: '0,0,0',
+            },
+            { merge: true }
+        );
+    }
+
     addListener(listener) {
         this.listeners.push(listener);
     }
@@ -97,8 +108,13 @@ class PoseMatchServer {
         });
     }
 
+    resetGame() {
+        this.readyAll = false;
+        this.setState('reset');
+    }
+
     checkReadyAllUsers() {
-        //console.log('CheckReadyAllUsers:', this.dataMap);
+        console.log('CheckReadyAllUsers:', this.dataMap);
         if (this.readyAll) {
             return;
         }
@@ -107,13 +123,17 @@ class PoseMatchServer {
             console.log('Check Ready:', key, value.state);
             if (value.state != 'ready') {
                 readyAll = false;
-            } else {
+            }
+            if (value.state == 'reset') {
+                this.notifyToListener('reset', key);
+            } else if (value.state == 'ready') {
                 this.notifyToListener('ready', key);
             }
         });
 
         if (readyAll == true) {
             this.readyAll = true;
+            this.resetScore();
             this.notifyToListener('readyAll', null);
         }
     }

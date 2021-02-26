@@ -13,13 +13,14 @@ class PoseMatch {
         this.state = 'notReady';
         this.currentScore = null;
         this.data = new Map();
-        this.data.set(0, new PoseData('countdown3', '/poseMatch/images/3.png'));
-        this.data.set(1, new PoseData('countdown2', '/poseMatch/images/2.png'));
-        this.data.set(2, new PoseData('countdown1', '/poseMatch/images/1.png'));
-        this.data.set(3, new PoseData('pose1', '/poseMatch/images/tree.jpg'));
-        this.data.set(6, new PoseData('pose2', '/poseMatch/images/lunge.jpg'));
+        this.data.set(0, new PoseData('logo', '/poseMatch/images/logo.png'));
+        this.data.set(1, new PoseData('countdown3', '/poseMatch/images/3.png'));
+        this.data.set(2, new PoseData('countdown2', '/poseMatch/images/2.png'));
+        this.data.set(3, new PoseData('countdown1', '/poseMatch/images/1.png'));
+        this.data.set(4, new PoseData('pose1', '/poseMatch/images/tree.jpg'));
+        this.data.set(7, new PoseData('pose2', '/poseMatch/images/lunge.jpg'));
         this.data.set(
-            9,
+            10,
             new PoseData('pose3', '/poseMatch/images/handstand.jpg')
         );
         this.data.set(12, new PoseData('stop', null));
@@ -43,8 +44,8 @@ class PoseMatch {
         this.server.init(user, userCollection);
         let readyButton = document.querySelector('#readyButton');
         readyButton.addEventListener('click', function () {
+            console.log('pushed ready button');
             readyButton.disabled = true;
-            console.log('ready button');
             PoseMatch.getInstance().getServer().setState('ready');
         });
 
@@ -54,7 +55,10 @@ class PoseMatch {
                 PoseMatch.getInstance()
                     .getViewManager()
                     .setState('ready', data);
+            } else if (cmd == 'reset') {
+                PoseMatch.getInstance().enableReadyButton(true);
             } else if (cmd == 'readyAll') {
+                PoseMatch.getInstance().getPEManager().start();
                 PoseMatch.getInstance().getTimer().start();
                 PoseMatch.getInstance()
                     .getViewManager()
@@ -81,8 +85,10 @@ class PoseMatch {
             } else if (cmd == 'stop') {
                 PoseMatch.getInstance().getViewManager().setState('stop', cmd);
                 PoseMatch.getInstance().getPEManager().stop();
+                PoseMatch.getInstance().getServer().resetGame();
             }
 
+            // TODO: refactoring
             if (cmd == 'pose2') {
                 PoseMatch.getInstance()
                     .getServer()
@@ -92,6 +98,7 @@ class PoseMatch {
                     .getServer()
                     .setScore(1, PoseMatch.getInstance().currentScore);
             } else if (cmd == 'stop') {
+                PoseMatch.getInstance().getTimer().stop();
                 PoseMatch.getInstance()
                     .getServer()
                     .setScore(2, PoseMatch.getInstance().currentScore);
@@ -101,7 +108,7 @@ class PoseMatch {
         let peListener = function (cmd, data) {
             if (cmd == 'peLoaded') {
                 console.log('[PEListener]', cmd, data);
-                PoseMatch.getInstance().enableReadyButton();
+                PoseMatch.getInstance().enableReadyButton(true);
             } else if (cmd == 'updateScore') {
                 let displayScore = document.getElementById('localScore');
                 displayScore.innerText = data;
@@ -125,6 +132,16 @@ class PoseMatch {
             }
         });
         this.peManager.init();
+        this.logTimer = setInterval(
+            function (poseMatch) {
+                poseMatch.viewManager
+                    .getGameView()
+                    .draw(poseMatch.data.get(0).img);
+                clearInterval(poseMatch.logTimer);
+            },
+            1000,
+            this
+        );
     }
 
     static getInstance() {
@@ -150,7 +167,8 @@ class PoseMatch {
         return this.peManager;
     }
 
-    enableReadyButton() {
-        document.getElementById('readyButton').disabled = false;
+    enableReadyButton(enable) {
+        console.log('enable ready', enable);
+        document.getElementById('readyButton').disabled = !enable;
     }
 }

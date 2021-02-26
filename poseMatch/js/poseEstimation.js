@@ -64,6 +64,7 @@ class PoseEstimation {
 
     stop() {
         clearInterval(this.interval);
+        this.interval = null;
     }
 
     updateTargetPE(pe) {
