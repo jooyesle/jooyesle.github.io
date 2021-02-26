@@ -121,7 +121,6 @@ class PoseMatchServer {
         this.userRef.set(
             {
                 name: this.user,
-                score: '0,0,0',
                 imgUrl: data.imgUrl,
             },
             { merge: true }
