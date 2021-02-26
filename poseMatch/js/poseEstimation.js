@@ -32,31 +32,63 @@ class PoseEstimation {
         this.listener = listener;
     }
 
+    async loop() {
+        if (this.frame.readyState == HAVE_ENOUGH_DATA) {
+            await this.estimateFrame();
+
+            if (!this.isLoaded) {
+                console.log('This is the first load for ' + this.name);
+                this.isLoaded = true;
+                this.notifyToListener('peLoaded', null);
+            }
+
+            let userView = PoseMatch.getInstance()
+                .getViewManager()
+                .getUserView(this.name);
+
+            userView.setKeyPoints(this.getKeyPoint());
+            userView.setKeyVectors(this.getKeyVector());
+
+            if (this.enableCalcScore) {
+                this.calcScore();
+            }
+        }
+        setTimeout(
+            function (pe) {
+                pe.loop();
+            },
+            500,
+            this
+        );
+    }
+
     async start() {
         if (this.interval != null) return;
         if (this.frame instanceof HTMLVideoElement) {
-            this.interval = setInterval(async () => {
-                if (this.frame.readyState == HAVE_ENOUGH_DATA) {
-                    await this.estimateFrame();
+            this.loop();
 
-                    if (!this.isLoaded) {
-                        console.log('This is the first load for ' + this.name);
-                        this.isLoaded = true;
-                        this.notifyToListener('peLoaded', null);
-                    }
+            // this.interval = setInterval(async () => {
+            //     if (this.frame.readyState == HAVE_ENOUGH_DATA) {
+            //         await this.estimateFrame();
 
-                    let userView = PoseMatch.getInstance()
-                        .getViewManager()
-                        .getUserView(this.name);
+            //         if (!this.isLoaded) {
+            //             console.log('This is the first load for ' + this.name);
+            //             this.isLoaded = true;
+            //             this.notifyToListener('peLoaded', null);
+            //         }
 
-                    userView.setKeyPoints(this.getKeyPoint());
-                    userView.setKeyVectors(this.getKeyVector());
+            //         let userView = PoseMatch.getInstance()
+            //             .getViewManager()
+            //             .getUserView(this.name);
 
-                    if (this.enableCalcScore) {
-                        this.calcScore();
-                    }
-                }
-            }, 100);
+            //         userView.setKeyPoints(this.getKeyPoint());
+            //         userView.setKeyVectors(this.getKeyVector());
+
+            //         if (this.enableCalcScore) {
+            //             this.calcScore();
+            //         }
+            //     }
+            // }, 3000);
         } else {
             await this.estimateFrame();
         }

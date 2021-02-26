@@ -194,7 +194,7 @@ class PoseMatchViewManager {
             function (viewer) {
                 viewer.draw();
             },
-            250,
+            500,
             this
         );
     }
