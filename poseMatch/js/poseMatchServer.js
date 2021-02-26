@@ -8,8 +8,6 @@ class UserData {
         var i;
         for (i = 0; i < GAME_STAGE_COUNT; i++) {
             this.score[i] = 0;
-        }
-        for (i = 0; i < GAME_STAGE_COUNT; i++) {
             this.imgUrl[i] = '';
         }
     }
@@ -43,29 +41,40 @@ class PoseMatchServer {
                 if (change.type === 'added' && data.name != this.user) {
                     this.addUser(data.name);
                 }
-                console.log('Changed Data: ', data);
-                if (data.state != undefined) {
-                    this.dataMap.get(data.name)['state'] = data.state;
-                    this.checkReadyAllUsers();
-                }
-                if (data.score != undefined) {
-                    let userData = this.dataMap.get(data.name);
-                    userData.score = data.score.split(',');
-                    // console.log(
-                    //     'update remote score:',
-                    //     userData.score,
-                    //     data.score
-                    // );
-                    this.notifyToListener('updateRemoteScore', null);
-                }
-                if (data.imgUrl != undefined) {
-                    console.log('ABCD', data.name, data.imgUrl);
-                    this.dataMap.get(data.name)['imgUrl'] = data.imgUrl;
-                    let isDone = true;
-                    this.dataMap.forEach((value, key, map) => {
-                        if (value.imgUrl[2] == '') isDone = false; // [2]: last posture
-                    });
-                    if (isDone) this.displayResultAllUsers();
+                if (change.type === 'modified') {
+                    console.log('Changed Data: ', data);
+                    if (data.state != undefined) {
+                        this.dataMap.get(data.name)['state'] = data.state;
+                        if (!this.readyAll) {
+                            if (data.state == 'reset') {
+                                if (data.name == this.user) {
+                                    this.notifyToListener('reset', data.name);
+                                }
+                            } else if (data.state == 'ready') {
+                                this.notifyToListener('ready', data.name);
+                            }
+                            this.checkReadyAllUsers();
+                        }
+                    }
+                    if (data.score != undefined) {
+                        let userData = this.dataMap.get(data.name);
+                        userData.score = data.score.split(',');
+                        // console.log(
+                        //     'update remote score:',
+                        //     userData.score,
+                        //     data.score
+                        // );
+                        this.notifyToListener('updateRemoteScore', null);
+                    }
+                    if (data.imgUrl != undefined) {
+                        console.log('ABCD', data.name, data.imgUrl);
+                        this.dataMap.get(data.name)['imgUrl'] = data.imgUrl;
+                        let isDone = true;
+                        this.dataMap.forEach((value, key, map) => {
+                            if (value.imgUrl[2] == '') isDone = false; // [2]: last posture
+                        });
+                        if (isDone) this.displayResultAllUsers();
+                    }
                 }
             });
         });
@@ -143,20 +152,16 @@ class PoseMatchServer {
     }
 
     checkReadyAllUsers() {
-        console.log('CheckReadyAllUsers:', this.dataMap);
         if (this.readyAll) {
             return;
         }
+        console.log('CheckReadyAllUsers:', this.dataMap);
+
         var readyAll = true;
         this.dataMap.forEach((value, key, map) => {
             console.log('Check Ready:', key, value.state);
             if (value.state != 'ready') {
                 readyAll = false;
-            }
-            if (value.state == 'reset') {
-                this.notifyToListener('reset', key);
-            } else if (value.state == 'ready') {
-                this.notifyToListener('ready', key);
             }
         });
 

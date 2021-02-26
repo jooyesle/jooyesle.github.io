@@ -57,6 +57,9 @@ class PoseMatch {
                     .setState('ready', data);
             } else if (cmd == 'reset') {
                 PoseMatch.getInstance().enableReadyButton(true);
+                PoseMatch.getInstance()
+                    .getViewManager()
+                    .setState('reset', data);
             } else if (cmd == 'readyAll') {
                 PoseMatch.getInstance().getPEManager().start();
                 PoseMatch.getInstance().getTimer().start();

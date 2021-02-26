@@ -28,14 +28,12 @@ class UserView {
     setText(text) {
         if (this.text != text) {
             this.text = text;
-            this.draw();
         }
     }
 
     setScoreData(dataMap) {
         if (this.dataMap != dataMap) {
             this.dataMap = dataMap;
-            this.draw();
         }
     }
 
@@ -53,18 +51,20 @@ class UserView {
             return;
         }
         var ctx = this.canvas.getContext('2d');
+
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawText(ctx);
         if (state == 'playing') {
             this.drawScore(ctx);
             this.drawSkeleton(ctx);
-        } else if (state == 'stop') {
+        } else if (state == 'stop' || state == 'reset') {
             this.drawResult(ctx);
         }
     }
 
     drawText(ctx) {
         if (this.text == null) return;
+
         ctx.font = 'bold 20px Courier';
         ctx.fillStyle = 'red';
         ctx.textAlign = 'center';
@@ -226,9 +226,18 @@ class PoseMatchViewManager {
         });
     }
 
+    setTextRemoteUserViews(text) {
+        this.viewMap.forEach((value, key, map) => {
+            if (key != this.myName) {
+                value.setText(text);
+            }
+        });
+    }
+
     setState(state, data) {
         if (this.state == state && this.stateData == data) return;
 
+        console.log('Viewer State:', this.state);
         if (state == 'ready') {
             this.viewMap.get(data).setText('Ready');
             return;
@@ -238,11 +247,12 @@ class PoseMatchViewManager {
             this.getMyUserView().setText(data);
         } else if (state == 'stop') {
             this.getMyUserView().setText('Result');
+        } else if (state == 'reset') {
+            this.setTextRemoteUserViews(null);
         }
 
         this.state = state;
         this.stateData = data;
-        console.log('Viewer State:', this.state);
     }
 
     setScoreData(name, dataMap) {
