@@ -66,8 +66,23 @@ class PoseEstimationManager {
     }
 
     createResultPose(imgId) {
-        let pe = new PoseEstimation(this.net, false);
+        let pe = new PoseEstimation(this.net, true);
         let img = document.getElementById(imgId);
+
+        let imgIdStr = imgId.toString();
+        console.log(imgIdStr);
+        switch ((imgIdStr.slice(-1) - '0') % 3) {
+            case 0:
+                pe.updateTargetPE(this.targetPoses.get('pose1'));
+                break;
+            case 1:
+                pe.updateTargetPE(this.targetPoses.get('pose2'));
+                break;
+            case 2:
+                pe.updateTargetPE(this.targetPoses.get('pose3'));
+                break;
+        }
+
         img.onload = function () {
             pe.init(img, img.id);
         };

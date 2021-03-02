@@ -195,6 +195,7 @@ class ResultView {
         this.keyVectors = null;
     }
 
+    draw() {}
     drawSkeleton() {
         let ctx = this.canvas.getContext('2d');
         if (this.keyPoints == null || this.keyVectors == null) return;
@@ -272,6 +273,8 @@ class PoseMatchViewManager {
         this.viewMap = new Map();
         this.gameView = new GameView(gameCanvas);
         this.drawAll();
+
+        this.resultViewMap = new Map();
     }
 
     drawAll() {
@@ -283,8 +286,6 @@ class PoseMatchViewManager {
             250,
             this
         );
-
-        this.resultViewMap = new Map();
     }
 
     setMyName(name) {
