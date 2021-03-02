@@ -66,7 +66,7 @@ class UserView {
         if (this.text == null) return;
 
         ctx.font = 'bold 20px Courier';
-        ctx.fillStyle = 'red';
+        ctx.fillStyle = 'white';
         ctx.textAlign = 'center';
         ctx.fillText(this.text, this.canvas.width / 2, 25);
     }
@@ -76,7 +76,7 @@ class UserView {
             return;
         }
         ctx.font = 'bold 14px Courier';
-        ctx.fillStyle = 'red';
+        ctx.fillStyle = 'white';
         ctx.textAlign = 'start';
         let x = this.canvas.width / 2 - 50;
         let y = 50;
@@ -100,7 +100,7 @@ class UserView {
             return;
         }
         ctx.font = 'bold 12px Courier';
-        ctx.fillStyle = 'red';
+        ctx.fillStyle = 'white';
         ctx.textAlign = 'left';
         let x = 5;
         let y = this.canvas.height / 6;

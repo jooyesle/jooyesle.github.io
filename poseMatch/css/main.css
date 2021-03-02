@@ -21,19 +21,19 @@ video {
 .monitor {
     position: absolute;
     /* border: solid 1px red; */
-    z-index: 9;
+    z-index: 8;
 }
 
 .system-monitor {
     position: absolute;
     /* border: solid 1px blue; */
-    z-index: 8;
+    z-index: 7;
 }
 
 .poseview {
     position: absolute;
     /* border: solid 3px whitesmoke; */
-    z-index: 7;
+    z-index: 6;
 }
 
 .hidden {
@@ -92,13 +92,13 @@ button {
 
 .resultCanvas {
     border: solid 2px white;
-    position: relative;
-    top: 3px;
-    right: 322px;
+    position: absolute;
+    /* top: 3px;
+    right: 322px; */
 }
 
 #localvideo {
-    border: solid 2px yellow;
+    border: solid 2px gray;
 }
 
 #login-div {
@@ -376,4 +376,41 @@ input[type='checkbox'] {
 }
 .input_on-off:checked + .label_on-off .marble {
     left: 33px;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 9; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: rgb(104, 104, 104);
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }

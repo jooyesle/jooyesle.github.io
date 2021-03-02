@@ -49,6 +49,15 @@ class PoseMatch {
             PoseMatch.getInstance().getServer().setState('ready');
         });
 
+        let resultButton = document.querySelector('#resultButton');
+        resultButton.addEventListener('click', function () {
+            resultDialog.style.display = 'block';
+        });
+        let closeResultButton = document.getElementsByClassName('close')[0];
+        closeResultButton.addEventListener('click', function () {
+            resultDialog.style.display = 'none';
+        });
+
         this.server.addListener(function (cmd, data) {
             console.log('[ServerListener]', cmd, data);
             if (cmd == 'ready') {
@@ -61,6 +70,7 @@ class PoseMatch {
                     .getViewManager()
                     .setState('reset', data);
             } else if (cmd == 'readyAll') {
+                PoseMatch.getInstance().enableResultButton(false);
                 PoseMatch.getInstance().getPEManager().start();
                 PoseMatch.getInstance().getTimer().start();
                 PoseMatch.getInstance()
@@ -92,6 +102,7 @@ class PoseMatch {
                 PoseMatch.getInstance().getViewManager().setState('stop', cmd);
                 PoseMatch.getInstance().getPEManager().stop();
                 PoseMatch.getInstance().getServer().resetGame();
+                PoseMatch.getInstance().enableResultButton(true);
             }
 
             // TODO: refactoring
@@ -179,6 +190,10 @@ class PoseMatch {
     enableReadyButton(enable) {
         console.log('enable ready', enable);
         document.getElementById('readyButton').disabled = !enable;
+    }
+
+    enableResultButton(enable) {
+        document.getElementById('resultButton').disabled = !enable;
     }
 
     captureAndSaveImg(idx) {

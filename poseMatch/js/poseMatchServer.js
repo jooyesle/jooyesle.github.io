@@ -167,6 +167,7 @@ class PoseMatchServer {
 
         if (readyAll == true) {
             this.readyAll = true;
+            this.displayed = false;
             this.resetScore();
             this.notifyToListener('readyAll', null);
         }
@@ -184,23 +185,25 @@ class PoseMatchServer {
 
             let userName = document.createElement('h2');
             userName.innerText = key;
+            userName.setAttribute('class', 'result-name');
             subdiv.appendChild(userName);
 
             for (let i in value.imgUrl) {
+                let canvas = document.createElement('canvas');
+                canvas.setAttribute('width', '320');
+                canvas.setAttribute('height', '240');
+                canvas.setAttribute('class', 'resultCanvas');
+                subdiv.appendChild(canvas);
+
                 let img = document.createElement('img');
                 img.setAttribute('width', '320');
                 img.setAttribute('height', '240');
                 img.setAttribute('id', 'res' + idx);
                 img.setAttribute('src', value.imgUrl[i]);
+                img.setAttribute('class', 'border: solid 2px red');
+                img.setAttribute('id', 'canvas' + idx);
                 resultImgs.push(img);
                 subdiv.appendChild(img);
-
-                let canvas = document.createElement('canvas');
-                canvas.setAttribute('width', '320');
-                canvas.setAttribute('height', '240');
-                img.setAttribute('id', 'canvas' + idx);
-                canvas.setAttribute('class', 'resultCanvas');
-                subdiv.appendChild(canvas);
 
                 idx++;
             }
