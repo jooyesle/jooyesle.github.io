@@ -185,6 +185,86 @@ class UserView {
     }
 }
 
+class ResultView {
+    constructor(name, canvas) {
+        this.name = name;
+        this.canvas = canvas;
+        this.keyPoints = null;
+        this.keyVectors = null;
+    }
+
+    drawSkeleton() {
+        let ctx = this.canvas.getContext('2d');
+        if (this.keyPoints == null || this.keyVectors == null) return;
+
+        let w = 5;
+        let h = 5;
+        let threshold = 0.86602540378; // +-30 deg
+        // good posture
+        ctx.beginPath();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#74C7B8';
+        for (let i = 0; i < skeleton.length; i++) {
+            if (this.keyVectors[i][2] >= threshold) {
+                ctx.moveTo(
+                    this.keyPoints[skeleton[i][0]][0],
+                    this.keyPoints[skeleton[i][0]][1]
+                );
+                ctx.lineTo(
+                    this.keyPoints[skeleton[i][1]][0],
+                    this.keyPoints[skeleton[i][1]][1]
+                );
+            }
+        }
+        ctx.stroke();
+        ctx.closePath();
+
+        // bad posture
+        ctx.beginPath();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#EF4F4F';
+        for (let i = 0; i < skeleton.length; i++) {
+            if (this.keyVectors[i][2] < threshold) {
+                ctx.moveTo(
+                    this.keyPoints[skeleton[i][0]][0],
+                    this.keyPoints[skeleton[i][0]][1]
+                );
+                ctx.lineTo(
+                    this.keyPoints[skeleton[i][1]][0],
+                    this.keyPoints[skeleton[i][1]][1]
+                );
+            }
+        }
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.fillStyle = '#FFCDA3';
+        for (let i = 0; i < this.keyPoints.length; i++) {
+            ctx.beginPath();
+            ctx.ellipse(
+                this.keyPoints[i][0],
+                this.keyPoints[i][1],
+                w,
+                h,
+                0,
+                0,
+                2 * Math.PI
+            );
+            ctx.fill();
+            ctx.closePath();
+        }
+    }
+
+    setKeyPoints(keyPoints) {
+        this.keyPoints = keyPoints;
+    }
+
+    setKeyVectors(keyVectors) {
+        this.keyVectors = keyVectors;
+        this.drawSkeleton();
+    }
+}
+
 class PoseMatchViewManager {
     constructor(gameCanvas) {
         this.viewMap = new Map();
@@ -197,6 +277,8 @@ class PoseMatchViewManager {
             500,
             this
         );
+
+        this.resultViewMap = new Map();
     }
 
     setMyName(name) {
@@ -215,8 +297,16 @@ class PoseMatchViewManager {
         return this.viewMap.get(name);
     }
 
+    getResultView(name) {
+        return this.resultViewMap.get(name);
+    }
+
     addUserView(name, canvas) {
         this.viewMap.set(name, new UserView(name, canvas));
+    }
+
+    addResultView(name, canvas) {
+        this.resultViewMap.set(name, new ResultView(name, canvas));
     }
 
     clearAll() {
@@ -249,7 +339,9 @@ class PoseMatchViewManager {
             this.getMyUserView().setText('Result');
         } else if (state == 'reset') {
             this.setTextRemoteUserViews(null);
-        }
+        } /*else if (state == 'resultReady') {
+            this.getResultView(data).drawSkeleton();
+        }*/
 
         this.state = state;
         this.stateData = data;

@@ -84,8 +84,22 @@ class PoseMatch {
                         PoseMatch.getInstance().getServer().dataMap
                     );
             } else if (cmd == 'createResultPose') {
-                console.log('Is this called only once?');
-                PoseMatch.getInstance().getPEManager().createResultPose(data);
+                for (let i = 0; i < data.children.length; i++) {
+                    for (
+                        let j = 1;
+                        j < data.children[i].children.length / 2;
+                        j++
+                    ) {
+                        let resCanvas = data.children[i].children[2 * j - 1];
+                        let resImg = data.children[i].children[2 * j];
+                        PoseMatch.getInstance()
+                            .getViewManager()
+                            .addResultView(resImg.id, resCanvas);
+                        PoseMatch.getInstance()
+                            .getPEManager()
+                            .createResultPose(resImg.id);
+                    }
+                }
             }
         });
 
@@ -149,7 +163,11 @@ class PoseMatch {
                 PoseMatch.getInstance()
                     .getPEManager()
                     .setPEListener('localvideo', peListener);
-            }
+            } /*else if (cmd == 'resultReady') {
+                PoseMatch.getInstance()
+                    .getViewManager()
+                    .setState('resultReady', data);
+            }*/
         });
         this.peManager.init();
         this.logTimer = setInterval(
@@ -213,7 +231,7 @@ class PoseMatch {
         imageHostingRequest.open(
             'POST',
             'https://api.imgbb.com/1/upload?' +
-                'expiration=60' +
+                'expiration=3600' +
                 '&key=15c781598b3e34982799db6f86a3819f' +
                 '&name=' +
                 PoseMatch.getInstance().user +
