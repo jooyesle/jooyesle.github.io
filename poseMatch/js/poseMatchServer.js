@@ -67,7 +67,6 @@ class PoseMatchServer {
                         this.notifyToListener('updateRemoteScore', null);
                     }
                     if (data.imgUrl != undefined) {
-                        console.log('ABCD', data.name, data.imgUrl);
                         this.dataMap.get(data.name)['imgUrl'] = data.imgUrl;
                         let isDone = true;
                         this.dataMap.forEach((value, key, map) => {
@@ -178,7 +177,7 @@ class PoseMatchServer {
         this.displayed = true;
         let displayResults = document.getElementById('displayResults');
         let idx = 0;
-        let resultImgs = [];
+
         this.dataMap.forEach((value, key, map) => {
             let subdiv = document.createElement('div');
             displayResults.appendChild(subdiv);
@@ -192,22 +191,21 @@ class PoseMatchServer {
                 let canvas = document.createElement('canvas');
                 canvas.setAttribute('width', '320');
                 canvas.setAttribute('height', '240');
+                canvas.setAttribute('id', 'resCan' + idx);
                 canvas.setAttribute('class', 'resultCanvas');
                 subdiv.appendChild(canvas);
 
                 let img = document.createElement('img');
                 img.setAttribute('width', '320');
                 img.setAttribute('height', '240');
-                img.setAttribute('id', 'res' + idx);
+                img.setAttribute('id', 'resImg' + idx);
                 img.setAttribute('src', value.imgUrl[i]);
-                img.setAttribute('class', 'border: solid 2px red');
-                img.setAttribute('id', 'canvas' + idx);
-                resultImgs.push(img);
+
                 subdiv.appendChild(img);
 
                 idx++;
             }
         });
-        this.notifyToListener('createResultPose', resultImgs);
+        this.notifyToListener('createResultPose', displayResults);
     }
 }

@@ -202,9 +202,21 @@ class UserView extends PoseView {
     }
 }
 
+class ResultView extends PoseView {
+    constructor(name, canvas) {
+        super(name, canvas);
+    }
+
+    setKeyVectors(keyVectors) {
+        super.setKeyVectors(keyVectors);
+        this.drawSkeleton();
+    }
+}
+
 class PoseMatchViewManager {
     constructor(gameCanvas) {
         this.viewMap = new Map();
+        this.resultViewMap = new Map();
         this.gameView = new GameView('gameview', gameCanvas);
         this.drawAll();
     }
@@ -236,8 +248,16 @@ class PoseMatchViewManager {
         return this.viewMap.get(name);
     }
 
+    getResultView(name) {
+        return this.resultViewMap.get(name);
+    }
+
     addUserView(name, canvas) {
         this.viewMap.set(name, new UserView(name, canvas));
+    }
+
+    addResultView(name, canvas) {
+        this.resultViewMap.set(name, new ResultView(name, canvas));
     }
 
     clear() {
@@ -270,7 +290,9 @@ class PoseMatchViewManager {
             this.getMyUserView().setText('Result');
         } else if (state == 'reset') {
             this.setTextRemoteUserViews(null);
-        }
+        } /*else if (state == 'resultReady') {
+            this.getResultView(data).drawSkeleton();
+        }*/
 
         this.state = state;
         this.stateData = data;
@@ -279,10 +301,6 @@ class PoseMatchViewManager {
 
     setScoreData(name, dataMap) {
         this.viewMap.get(name).setScoreData(dataMap);
-    }
-
-    setKeyPoints(name, keyPoints) {
-        this.viewMap.get(name).setKeyPoints(keyPoints);
     }
 
     draw() {

@@ -65,11 +65,14 @@ class PoseEstimationManager {
         });
     }
 
-    createResultPose(imgs) {
-        for (let i in imgs) {
-            //TO DO : draw skeleton with result images
-            console.log('@@@' + imgs[i].src);
-        }
+    createResultPose(imgId) {
+        let pe = new PoseEstimation(this.net, false);
+        let img = document.getElementById(imgId);
+        img.onload = function () {
+            pe.init(img, img.id);
+        };
+
+        //this.notifyToListener('resultReady', resImg.id);
     }
 
     addListener(listener) {
