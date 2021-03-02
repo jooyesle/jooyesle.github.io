@@ -128,8 +128,14 @@ class PoseMatch {
                 PoseMatch.getInstance().enableReadyButton(true);
             } else if (cmd == 'updateScore') {
                 let displayScore = document.getElementById('localScore');
-                displayScore.innerText = data;
-                PoseMatch.getInstance().currentScore = data;
+                if (
+                    PoseMatch.getInstance().getViewManager().state == 'playing'
+                ) {
+                    displayScore.innerText = data;
+                    PoseMatch.getInstance().currentScore = data;
+                } else {
+                    displayScore.innerText = '00.00';
+                }
             }
         };
 
@@ -153,7 +159,7 @@ class PoseMatch {
             function (poseMatch) {
                 poseMatch.viewManager
                     .getGameView()
-                    .draw(poseMatch.data.get(0).img);
+                    .drawImage(poseMatch.data.get(0).img);
                 clearInterval(poseMatch.logTimer);
             },
             1000,

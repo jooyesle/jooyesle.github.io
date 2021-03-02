@@ -33,7 +33,7 @@ class PoseTimer {
                         poseTimer.stop();
                         return;
                     }
-                    poseTimer.targetView.draw(
+                    poseTimer.targetView.drawImage(
                         poseTimer.data.get(poseTimer.index).img
                     );
                 }
