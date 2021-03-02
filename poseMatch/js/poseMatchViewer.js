@@ -298,7 +298,9 @@ class PoseMatchViewManager {
 
         this.state = state;
         this.stateData = data;
-        this.getMyUserView().setState(this.state);
+        this.viewMap.forEach((value, key, map) => {
+            value.setState(this.state);
+        });
     }
 
     setScoreData(name, dataMap) {
