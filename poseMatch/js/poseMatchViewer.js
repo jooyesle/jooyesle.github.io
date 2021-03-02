@@ -219,6 +219,8 @@ class PoseMatchViewManager {
         this.resultViewMap = new Map();
         this.gameView = new GameView('gameview', gameCanvas);
         this.drawAll();
+
+        this.resultViewMap = new Map();
     }
 
     drawAll() {

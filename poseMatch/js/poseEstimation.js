@@ -90,12 +90,11 @@ class PoseEstimation {
             //     }
             // }, 3000);
         } else {
-            console.log(this.frame.src);
             await this.estimateFrame();
-            console.log(this.getKeyPoint());
 
             if (this.name.toString().substring(0, 6) == 'resImg') {
-                console.log(this.frame.id);
+                this.score = this.calcCosSim(this.targetPE.getKeyVector());
+
                 let resultView = PoseMatch.getInstance()
                     .getViewManager()
                     .getResultView(this.name);
