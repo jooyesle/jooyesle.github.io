@@ -51,15 +51,14 @@ class UserView {
             return;
         }
         var ctx = this.canvas.getContext('2d');
-
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.drawText(ctx);
         if (state == 'playing') {
             this.drawScore(ctx);
             this.drawSkeleton(ctx);
         } else if (state == 'stop' || state == 'reset') {
             this.drawResult(ctx);
         }
+        this.drawText(ctx);
     }
 
     drawText(ctx) {
@@ -75,6 +74,9 @@ class UserView {
         if (this.dataMap == null) {
             return;
         }
+        ctx.fillStyle = 'rgba(0,0,0,0.7)';
+        ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
         ctx.font = 'bold 14px Courier';
         ctx.fillStyle = 'white';
         ctx.textAlign = 'start';
@@ -189,12 +191,16 @@ class PoseMatchViewManager {
     constructor(gameCanvas) {
         this.viewMap = new Map();
         this.gameView = new GameView(gameCanvas);
+        this.drawAll();
+    }
 
-        this.timerId = setInterval(
+    drawAll() {
+        this.draw();
+        setTimeout(
             function (viewer) {
-                viewer.draw();
+                viewer.drawAll();
             },
-            500,
+            250,
             this
         );
     }

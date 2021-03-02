@@ -17,12 +17,9 @@ class PoseMatch {
         this.data.set(1, new PoseData('countdown3', '/poseMatch/images/3.png'));
         this.data.set(2, new PoseData('countdown2', '/poseMatch/images/2.png'));
         this.data.set(3, new PoseData('countdown1', '/poseMatch/images/1.png'));
-        this.data.set(4, new PoseData('pose1', '/poseMatch/images/tree.jpg'));
-        this.data.set(9, new PoseData('pose2', '/poseMatch/images/lunge.jpg'));
-        this.data.set(
-            14,
-            new PoseData('pose3', '/poseMatch/images/handstand.jpg')
-        );
+        this.data.set(4, new PoseData('pose1', '/poseMatch/images/pose1.png'));
+        this.data.set(9, new PoseData('pose2', '/poseMatch/images/pose2.png'));
+        this.data.set(14, new PoseData('pose3', '/poseMatch/images/pose3.png'));
         this.data.set(19, new PoseData('stop', null));
 
         this.server = new PoseMatchServer();

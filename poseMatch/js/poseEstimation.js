@@ -57,7 +57,7 @@ class PoseEstimation {
             function (pe) {
                 pe.loop();
             },
-            500,
+            250,
             this
         );
     }
