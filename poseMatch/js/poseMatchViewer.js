@@ -116,6 +116,38 @@ class PoseView extends BaseView {
 class GameView extends PoseView {
     constructor(name, canvas) {
         super(name, canvas);
+        this.keyPointsList = new Array(3);
+        this.keyVectorsList = new Array(3);
+    }
+
+    setKeyPoints(idx) {
+        super.setKeyPoints(null);
+        this.keyPoints = this.keyPointsList[idx];
+    }
+
+    setKeyVectors(idx) {
+        super.setKeyVectors(null);
+        this.keyVectors = this.keyVectorsList[idx];
+    }
+
+    addKeyPoints(idx, keyPoints) {
+        this.keyPointsList[idx] = keyPoints;
+    }
+
+    addKeyVectors(idx, keyVectors) {
+        this.keyVectorsList[idx] = keyVectors;
+    }
+
+    drawImage(img) {
+        super.drawImage(img);
+
+        if (img.id != '') {
+            let idx = img.id.toString().slice(-1) - '0';
+
+            this.setKeyPoints(idx);
+            this.setKeyVectors(idx);
+            this.drawSkeleton();
+        }
     }
 }
 
@@ -206,11 +238,6 @@ class ResultView extends PoseView {
     constructor(name, canvas) {
         super(name, canvas);
     }
-
-    setKeyVectors(keyVectors) {
-        super.setKeyVectors(keyVectors);
-        this.drawSkeleton();
-    }
 }
 
 class PoseMatchViewManager {
@@ -292,9 +319,7 @@ class PoseMatchViewManager {
             this.getMyUserView().setText('Result');
         } else if (state == 'reset') {
             this.setTextRemoteUserViews(null);
-        } /*else if (state == 'resultReady') {
-            this.getResultView(data).drawSkeleton();
-        }*/
+        }
 
         this.state = state;
         this.stateData = data;

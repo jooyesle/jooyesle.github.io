@@ -99,11 +99,20 @@ class PoseEstimation {
                     .getViewManager()
                     .getResultView(this.name);
 
-                console.log(resultView);
                 resultView.setKeyPoints(this.getKeyPoint());
                 resultView.setKeyVectors(this.getKeyVector());
+                resultView.drawSkeleton();
+            } else {
+                for (let i = 0; i < this.keyVector.length; i++)
+                    this.keyVector[i][2] = 1.0;
+
+                let gameView = PoseMatch.getInstance()
+                    .getViewManager()
+                    .getGameView();
+                let idx = this.name.toString().slice(-1) - '0';
+                gameView.addKeyPoints(idx, this.getKeyPoint());
+                gameView.addKeyVectors(idx, this.getKeyVector());
             }
-            // 이때 notify 해야 함.
         }
     }
 

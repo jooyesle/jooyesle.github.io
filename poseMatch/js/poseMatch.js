@@ -5,6 +5,7 @@ class PoseData {
         this.cmd = cmd;
         this.img = new Image(320, 240);
         if (imgPath != null) this.img.src = imgPath;
+        if (cmd.indexOf('pose') >= 0) this.img.id = cmd;
     }
 }
 
@@ -166,11 +167,7 @@ class PoseMatch {
                 PoseMatch.getInstance()
                     .getPEManager()
                     .setPEListener('localvideo', peListener);
-            } /*else if (cmd == 'resultReady') {
-                PoseMatch.getInstance()
-                    .getViewManager()
-                    .setState('resultReady', data);
-            }*/
+            }
         });
         this.peManager.init();
         this.logTimer = setInterval(

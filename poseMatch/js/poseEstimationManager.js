@@ -44,7 +44,7 @@ class PoseEstimationManager {
         this.data.forEach((value, key, map) => {
             if (value.cmd.indexOf('pose') >= 0) {
                 let pe = new PoseEstimation(this.net, false);
-                pe.init(value.img, key);
+                pe.init(value.img, value.cmd);
                 this.targetPoses.set(value.cmd, pe);
             }
         });
@@ -70,7 +70,6 @@ class PoseEstimationManager {
         let img = document.getElementById(imgId);
 
         let imgIdStr = imgId.toString();
-        console.log(imgIdStr);
         switch ((imgIdStr.slice(-1) - '0') % 3) {
             case 0:
                 pe.updateTargetPE(this.targetPoses.get('pose1'));
@@ -86,8 +85,6 @@ class PoseEstimationManager {
         img.onload = function () {
             pe.init(img, img.id);
         };
-
-        //this.notifyToListener('resultReady', resImg.id);
     }
 
     addListener(listener) {
