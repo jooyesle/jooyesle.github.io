@@ -69,7 +69,7 @@ class PoseMatch {
                     .setState('reset', data);
             } else if (cmd == 'readyAll') {
                 PoseMatch.getInstance().enableResultButton(false);
-                PoseMatch.getInstance().getPEManager().start();
+                //PoseMatch.getInstance().getPEManager().start();
                 PoseMatch.getInstance().getTimer().start();
                 PoseMatch.getInstance()
                     .getViewManager()
@@ -112,7 +112,7 @@ class PoseMatch {
                     .updateTargetPE('localvideo', cmd);
             } else if (cmd == 'stop') {
                 PoseMatch.getInstance().getViewManager().setState('stop', cmd);
-                PoseMatch.getInstance().getPEManager().stop();
+                //PoseMatch.getInstance().getPEManager().stop();
                 PoseMatch.getInstance().getServer().resetGame();
                 PoseMatch.getInstance().enableResultButton(true);
             }
@@ -140,7 +140,7 @@ class PoseMatch {
         let peListener = function (cmd, data) {
             if (cmd == 'peLoaded') {
                 console.log('[PEListener]', cmd, data);
-                PoseMatch.getInstance().enableReadyButton(true);
+                //PoseMatch.getInstance().enableReadyButton(true);
             } else if (cmd == 'updateScore') {
                 let displayScore = document.getElementById('localScore');
                 if (
@@ -167,6 +167,7 @@ class PoseMatch {
                 PoseMatch.getInstance()
                     .getPEManager()
                     .setPEListener('localvideo', peListener);
+                PoseMatch.getInstance().enableReadyButton(true);
             }
         });
         this.peManager.init();

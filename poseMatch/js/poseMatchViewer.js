@@ -131,6 +131,7 @@ class GameView extends PoseView {
     }
 
     addKeyPoints(idx, keyPoints) {
+        console.log('addkeypoints', idx, keyPoints);
         this.keyPointsList[idx] = keyPoints;
     }
 
@@ -140,7 +141,7 @@ class GameView extends PoseView {
 
     drawImage(img) {
         super.drawImage(img);
-
+        console.log('image id : ', img.id);
         if (img.id != '') {
             let idx = img.id.toString().slice(-1) - '0';
 
@@ -252,13 +253,13 @@ class PoseMatchViewManager {
 
     drawAll() {
         this.draw();
-        setTimeout(
-            function (viewer) {
-                viewer.drawAll();
-            },
-            250,
-            this
-        );
+        // setTimeout(
+        //     function (viewer) {
+        //         viewer.drawAll();
+        //     },
+        //     250,
+        //     this
+        // );
     }
 
     setMyName(name) {

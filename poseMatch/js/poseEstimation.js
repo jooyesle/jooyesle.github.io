@@ -14,12 +14,6 @@ class PoseEstimation {
         this.isLoaded = false;
     }
 
-    init(frame, name) {
-        this.frame = frame;
-        this.name = name;
-        this.start();
-    }
-
     notifyToListener(cmd, data) {
         if (this.listener != null) {
             this.listener(cmd, data);
@@ -32,100 +26,18 @@ class PoseEstimation {
         this.listener = listener;
     }
 
-    async loop() {
-        if (this.frame.readyState == HAVE_ENOUGH_DATA) {
-            await this.estimateFrame();
-
-            if (!this.isLoaded) {
-                console.log('This is the first load for ' + this.name);
-                this.isLoaded = true;
-                this.notifyToListener('peLoaded', null);
-            }
-
-            let userView = PoseMatch.getInstance()
-                .getViewManager()
-                .getUserView(this.name);
-
-            userView.setKeyPoints(this.getKeyPoint());
-            userView.setKeyVectors(this.getKeyVector());
-
-            if (this.enableCalcScore) {
-                this.calcScore();
-            }
-        }
-        setTimeout(
-            function (pe) {
-                pe.loop();
-            },
-            250,
-            this
-        );
-    }
-
-    async start() {
-        if (this.interval != null) return;
-        if (this.frame instanceof HTMLVideoElement) {
-            this.loop();
-
-            // this.interval = setInterval(async () => {
-            //     if (this.frame.readyState == HAVE_ENOUGH_DATA) {
-            //         await this.estimateFrame();
-
-            //         if (!this.isLoaded) {
-            //             console.log('This is the first load for ' + this.name);
-            //             this.isLoaded = true;
-            //             this.notifyToListener('peLoaded', null);
-            //         }
-
-            //         let userView = PoseMatch.getInstance()
-            //             .getViewManager()
-            //             .getUserView(this.name);
-
-            //         userView.setKeyPoints(this.getKeyPoint());
-            //         userView.setKeyVectors(this.getKeyVector());
-
-            //         if (this.enableCalcScore) {
-            //             this.calcScore();
-            //         }
-            //     }
-            // }, 3000);
-        } else {
-            await this.estimateFrame();
-
-            if (this.name.toString().substring(0, 6) == 'resImg') {
-                this.score = this.calcCosSim(this.targetPE.getKeyVector());
-
-                let resultView = PoseMatch.getInstance()
-                    .getViewManager()
-                    .getResultView(this.name);
-
-                resultView.setKeyPoints(this.getKeyPoint());
-                resultView.setKeyVectors(this.getKeyVector());
-                resultView.drawSkeleton();
-            } else {
-                for (let i = 0; i < this.keyVector.length; i++)
-                    this.keyVector[i][2] = 1.0;
-
-                let gameView = PoseMatch.getInstance()
-                    .getViewManager()
-                    .getGameView();
-                let idx = this.name.toString().slice(-1) - '0';
-                gameView.addKeyPoints(idx, this.getKeyPoint());
-                gameView.addKeyVectors(idx, this.getKeyVector());
-            }
-        }
-    }
-
-    stop() {
-        clearInterval(this.interval);
-        this.interval = null;
+    init(frame, name) {
+        this.frame = frame;
+        this.name = name;
     }
 
     updateTargetPE(pe) {
         this.targetPE = pe;
     }
 
-    async estimateFrame() {
+    updateSkeleton() {}
+
+    async estimate() {
         try {
             this.pose = await this.net.estimateSinglePose(
                 this.frame,
@@ -136,6 +48,11 @@ class PoseEstimation {
 
             this.updateKeyPoint();
             this.updateKeyVector();
+            if (this.enableCalcScore) {
+                this.calcScore();
+            }
+
+            this.updateSkeleton();
         } catch {
             console.log(this.name + 'Error loading pose estimation');
         }
@@ -195,5 +112,60 @@ class PoseEstimation {
         avgCosSim *= 100;
 
         return avgCosSim.toFixed(2);
+    }
+}
+
+class ImageEstimation extends PoseEstimation {
+    constructor(net, enableCalcScore) {
+        super(net, enableCalcScore);
+        this.type = 'image';
+    }
+
+    init(image, name) {
+        super.init(image, name);
+        this.estimate();
+    }
+}
+
+class GameEstimation extends ImageEstimation {
+    constructor(net, enableCalcScore) {
+        super(net, enableCalcScore);
+    }
+    updateSkeleton() {
+        let gameView = PoseMatch.getInstance().getViewManager().getGameView();
+        let idx = this.name.toString().slice(-1) - '0';
+        gameView.addKeyPoints(idx, this.getKeyPoint());
+        gameView.addKeyVectors(idx, this.getKeyVector());
+    }
+}
+
+class ResultEstimation extends ImageEstimation {
+    constructor(net, enableCalcScore) {
+        super(net, enableCalcScore);
+    }
+    updateSkeleton() {
+        this.score = this.calcCosSim(this.targetPE.getKeyVector());
+        let resultView = PoseMatch.getInstance()
+            .getViewManager()
+            .getResultView(this.name);
+        resultView.setKeyPoints(this.getKeyPoint());
+        resultView.setKeyVectors(this.getKeyVector());
+        resultView.drawSkeleton();
+    }
+}
+
+class VideoEstimation extends PoseEstimation {
+    constructor(net, enableCalcScore) {
+        super(net, enableCalcScore);
+        this.type = 'video';
+    }
+
+    updateSkeleton() {
+        let userView = PoseMatch.getInstance()
+            .getViewManager()
+            .getUserView(this.name);
+
+        userView.setKeyPoints(this.getKeyPoint());
+        userView.setKeyVectors(this.getKeyVector());
     }
 }

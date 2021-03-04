@@ -13,6 +13,7 @@ const skeleton = [
     [15, 13],
     [16, 14],
 ];
+var prev = 0;
 
 class PoseEstimationManager {
     constructor(data) {
@@ -20,6 +21,7 @@ class PoseEstimationManager {
         this.videoPoses = new Map();
         this.data = data;
         this.listener = null;
+        this.prev = 0;
     }
 
     notifyToListener(cmd, data) {
@@ -36,14 +38,30 @@ class PoseEstimationManager {
             multiplier: 1.0,
         });
 
+        await this.createTargetPoses();
         this.notifyToListener('posenetLoaded', null);
-        this.createTargetPoses();
+
+        var draw = function () {
+            //if (performance.now() - prev > 250) {
+            if (
+                PoseMatch.getInstance().getViewManager().state == 'playing' ||
+                PoseMatch.getInstance().getViewManager().state == 'stop' ||
+                PoseMatch.getInstance().getViewManager().state == 'reset'
+            ) {
+                PoseMatch.getInstance().getPEManager().estimate();
+            }
+            PoseMatch.getInstance().getViewManager().draw();
+            //prev = performance.now();
+            //}
+            requestAnimationFrame(draw);
+        };
+        requestAnimationFrame(draw);
     }
 
     async createTargetPoses() {
         this.data.forEach((value, key, map) => {
             if (value.cmd.indexOf('pose') >= 0) {
-                let pe = new PoseEstimation(this.net, false);
+                let pe = new GameEstimation(this.net, false);
                 pe.init(value.img, value.cmd);
                 this.targetPoses.set(value.cmd, pe);
             }
@@ -51,7 +69,8 @@ class PoseEstimationManager {
     }
 
     createVideoPose(videoId, userName, enableCalcScore) {
-        let vidPose = new PoseEstimation(this.net, enableCalcScore);
+        if (videoId != 'localvideo') return;
+        let vidPose = new VideoEstimation(this.net, enableCalcScore);
         let video = document.getElementById(videoId);
         video.width = 320;
         video.height = 240;
@@ -66,10 +85,11 @@ class PoseEstimationManager {
     }
 
     createResultPose(imgId) {
-        let pe = new PoseEstimation(this.net, true);
+        let pe = new ResultEstimation(this.net, true);
         let img = document.getElementById(imgId);
 
         let imgIdStr = imgId.toString();
+        console.log(imgIdStr);
         switch ((imgIdStr.slice(-1) - '0') % 3) {
             case 0:
                 pe.updateTargetPE(this.targetPoses.get('pose1'));
@@ -85,6 +105,8 @@ class PoseEstimationManager {
         img.onload = function () {
             pe.init(img, img.id);
         };
+
+        //this.notifyToListener('resultReady', resImg.id);
     }
 
     addListener(listener) {
@@ -100,15 +122,26 @@ class PoseEstimationManager {
         this.videoPoses.get(name).updateTargetPE(this.targetPoses.get(pose));
     }
 
-    start() {
-        this.videoPoses.forEach((value, key, map) => {
-            value.start();
-        });
-    }
+    // start() {
+    //     // console.log(this.targetPoses);
+    //     // this.targetPoses.forEach((value, key, map) => {
+    //     //     value.start();
+    //     // });
+    //     // this.videoPoses.forEach((value, key, map) => {
+    //     //     value.start();
+    //     // });
+    // }
 
-    stop() {
+    // stop() {
+    //     // this.videoPoses.forEach((value, key, map) => {
+    //     //     value.stop();
+    //     // });
+    //     //requestAnimationFrame(null);
+    // }
+
+    estimate() {
         this.videoPoses.forEach((value, key, map) => {
-            value.stop();
+            value.estimate();
         });
     }
 }
