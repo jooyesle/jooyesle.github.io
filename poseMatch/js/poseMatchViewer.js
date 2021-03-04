@@ -158,6 +158,13 @@ class UserView extends PoseView {
         this.state = 'init';
     }
 
+    setKeyPoints(keyPoints) {
+        super.setKeyPoints(keyPoints);
+        for (let i = 0; i < keyPoints.length; i++) {
+            keyPoints[i][0] = 320 - keyPoints[i][0];
+        }
+    }
+
     setScoreData(dataMap) {
         if (this.dataMap != dataMap) {
             this.dataMap = dataMap;

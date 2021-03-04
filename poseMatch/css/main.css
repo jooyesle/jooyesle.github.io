@@ -16,9 +16,9 @@ body {
 video {
     max-width: 100%;
     width: 320px;
-    /* transform: rotateY(180deg);
+    transform: rotateY(180deg);
     -webkit-transform: rotateY(180deg);
-    -moz-transform: rotateY(180deg); */
+    -moz-transform: rotateY(180deg);
 }
 
 .monitor {
@@ -93,11 +93,23 @@ button {
     right: 328px;
 } */
 
+.resultImg {
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+
+    position: relative;
+    z-index: 1;
+}
+
 .resultCanvas {
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+
     border: solid 2px white;
     position: absolute;
-    /* top: 3px;
-    right: 322px; */
+    z-index: 2;
 }
 
 #localvideo {

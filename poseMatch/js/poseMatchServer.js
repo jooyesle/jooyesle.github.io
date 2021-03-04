@@ -199,6 +199,7 @@ class PoseMatchServer {
                 img.setAttribute('width', '320');
                 img.setAttribute('height', '240');
                 img.setAttribute('id', 'resImg' + idx);
+                img.setAttribute('class', 'resultImg');
                 img.setAttribute('src', value.imgUrl[i]);
 
                 subdiv.appendChild(img);
