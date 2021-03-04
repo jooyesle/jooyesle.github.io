@@ -123,11 +123,17 @@ class GameView extends PoseView {
     setKeyPoints(idx) {
         super.setKeyPoints(null);
         this.keyPoints = this.keyPointsList[idx];
+        for (let i = 0; i < this.keyPoints.length; i++) {
+            this.keyPoints[i][0] = 320 - this.keyPoints[i][0];
+        }
     }
 
     setKeyVectors(idx) {
         super.setKeyVectors(null);
         this.keyVectors = this.keyVectorsList[idx];
+        for (let i = 0; i < this.keyVectors.length; i++) {
+            this.keyVectors[i][2] = 1.0;
+        }
     }
 
     addKeyPoints(idx, keyPoints) {
@@ -161,8 +167,8 @@ class UserView extends PoseView {
 
     setKeyPoints(keyPoints) {
         super.setKeyPoints(keyPoints);
-        for (let i = 0; i < keyPoints.length; i++) {
-            keyPoints[i][0] = 320 - keyPoints[i][0];
+        for (let i = 0; i < this.keyPoints.length; i++) {
+            this.keyPoints[i][0] = 320 - this.keyPoints[i][0];
         }
     }
 

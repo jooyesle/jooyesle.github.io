@@ -131,6 +131,14 @@ class GameEstimation extends ImageEstimation {
     constructor(net, enableCalcScore) {
         super(net, enableCalcScore);
     }
+
+    updateKeyPoint() {
+        super.updateKeyPoint();
+        for (let i = 0; i < this.keyPoint.length; i++) {
+            this.keyPoint[i][0] = 320 - this.keyPoint[i][0];
+        }
+    }
+
     updateSkeleton() {
         let gameView = PoseMatch.getInstance().getViewManager().getGameView();
         let idx = this.name.toString().slice(-1) - '0';
