@@ -41,32 +41,31 @@ class PoseEstimationManager {
         await this.createTargetPoses();
         this.notifyToListener('posenetLoaded', null);
 
-        // var draw = function () {
-        //     if (performance.now() - prev > 250) {
-        //         if (
-        //             PoseMatch.getInstance().getViewManager().state ==
-        //                 'playing' ||
-        //             PoseMatch.getInstance().getViewManager().state == 'stop' ||
-        //             PoseMatch.getInstance().getViewManager().state == 'reset'
-        //         ) {
-        //             PoseMatch.getInstance().getPEManager().estimate();
-        //             PoseMatch.getInstance().getViewManager().draw();
-        //         }
-
-        //         prev = performance.now();
-        //     }
-        //     requestAnimationFrame(draw);
-        // };
-        // requestAnimationFrame(draw);
-
         var draw = function () {
-            if (PoseMatch.getInstance().getViewManager().state == 'playing') {
-                PoseMatch.getInstance().getPEManager().estimate();
+            if (performance.now() - prev > 100) {
+                if (
+                    PoseMatch.getInstance().getViewManager().state ==
+                        'playing' ||
+                    PoseMatch.getInstance().getViewManager().state == 'stop' ||
+                    PoseMatch.getInstance().getViewManager().state == 'reset'
+                ) {
+                    PoseMatch.getInstance().getPEManager().estimate();
+                }
+                PoseMatch.getInstance().getViewManager().draw();
+                prev = performance.now();
             }
-            PoseMatch.getInstance().getViewManager().draw();
-            setTimeout(draw, 250);
+            requestAnimationFrame(draw);
         };
-        setTimeout(draw, 250);
+        requestAnimationFrame(draw);
+
+        // var draw = function () {
+        //     if (PoseMatch.getInstance().getViewManager().state == 'playing') {
+        //         PoseMatch.getInstance().getPEManager().estimate();
+        //     }
+        //     PoseMatch.getInstance().getViewManager().draw();
+        //     setTimeout(draw, 250);
+        // };
+        // setTimeout(draw, 250);
     }
 
     async createTargetPoses() {
