@@ -115,8 +115,6 @@ class PoseEstimationManager {
         img.onload = function () {
             pe.init(img, img.id);
         };
-
-        //this.notifyToListener('resultReady', resImg.id);
     }
 
     addListener(listener) {
@@ -131,23 +129,6 @@ class PoseEstimationManager {
         console.log('Update Target PE:', name, pose);
         this.videoPoses.get(name).updateTargetPE(this.targetPoses.get(pose));
     }
-
-    // start() {
-    //     // console.log(this.targetPoses);
-    //     // this.targetPoses.forEach((value, key, map) => {
-    //     //     value.start();
-    //     // });
-    //     // this.videoPoses.forEach((value, key, map) => {
-    //     //     value.start();
-    //     // });
-    // }
-
-    // stop() {
-    //     // this.videoPoses.forEach((value, key, map) => {
-    //     //     value.stop();
-    //     // });
-    //     //requestAnimationFrame(null);
-    // }
 
     estimate() {
         this.videoPoses.forEach((value, key, map) => {

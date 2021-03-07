@@ -147,7 +147,6 @@ class GameView extends PoseView {
 
     drawImage(img) {
         super.drawImage(img);
-        console.log('image id : ', img.id);
         if (img.id != '') {
             let idx = img.id.toString().slice(-1) - '0';
 
@@ -259,20 +258,9 @@ class PoseMatchViewManager {
         this.viewMap = new Map();
         this.resultViewMap = new Map();
         this.gameView = new GameView('gameview', gameCanvas);
-        this.drawAll();
+        this.draw();
 
         this.resultViewMap = new Map();
-    }
-
-    drawAll() {
-        this.draw();
-        // setTimeout(
-        //     function (viewer) {
-        //         viewer.drawAll();
-        //     },
-        //     250,
-        //     this
-        // );
     }
 
     setMyName(name) {

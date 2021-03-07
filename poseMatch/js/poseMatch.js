@@ -69,7 +69,6 @@ class PoseMatch {
                     .setState('reset', data);
             } else if (cmd == 'readyAll') {
                 PoseMatch.getInstance().enableResultButton(false);
-                //PoseMatch.getInstance().getPEManager().start();
                 PoseMatch.getInstance().getTimer().start();
                 PoseMatch.getInstance()
                     .getViewManager()
@@ -112,7 +111,6 @@ class PoseMatch {
                     .updateTargetPE('localvideo', cmd);
             } else if (cmd == 'stop') {
                 PoseMatch.getInstance().getViewManager().setState('stop', cmd);
-                //PoseMatch.getInstance().getPEManager().stop();
                 PoseMatch.getInstance().getServer().resetGame();
                 PoseMatch.getInstance().enableResultButton(true);
             }
