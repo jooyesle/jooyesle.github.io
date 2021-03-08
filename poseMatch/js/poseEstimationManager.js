@@ -110,12 +110,13 @@ class PoseEstimationManager {
         video.height = 240;
 
         this.videoPoses.set(videoId, vidPose);
+        vidPose.init(video, userName);
 
-        video.addEventListener('playing', function () {
+        /*video.addEventListener('playing', function () {
             if (video.readyState == HAVE_ENOUGH_DATA) {
                 vidPose.init(video, userName);
             }
-        });
+        });*/
     }
 
     createResultPose(imgId) {
