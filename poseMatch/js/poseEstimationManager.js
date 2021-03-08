@@ -69,13 +69,37 @@ class PoseEstimationManager {
     }
 
     async createTargetPoses() {
-        this.data.forEach((value, key, map) => {
+        for (let data of this.data) {
+            let value = data[1];
             if (value.cmd.indexOf('pose') >= 0) {
                 let pe = new GameEstimation(this.net, false);
+                let targetImg = value.img;
+                let targetName = value.cmd;
+                console.log(targetImg.complete, targetImg.naturalHeight);
+                if (
+                    targetImg.complete == true &&
+                    targetImg.naturalHeight != 0
+                ) {
+                    await pe.init(targetImg, targetName);
+                    this.targetPoses.set(targetName, pe);
+                } else {
+                    let targetPoses = this.targetPoses;
+                    targetImg.onload = async function () {
+                        await pe.init(targetImg, targetName);
+                        targetPoses.set(targetName, pe);
+                    };
+                }
+            }
+        }
+
+        /*this.data.forEach((value, key, map) => {
+            if (value.cmd.indexOf('pose') >= 0) {
+                let pe = new GameEstimation(this.net, false);
+
                 pe.init(value.img, value.cmd);
                 this.targetPoses.set(value.cmd, pe);
             }
-        });
+        });*/
     }
 
     createVideoPose(videoId, userName, enableCalcScore) {

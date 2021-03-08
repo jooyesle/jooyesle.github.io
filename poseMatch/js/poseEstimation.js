@@ -121,9 +121,9 @@ class ImageEstimation extends PoseEstimation {
         this.type = 'image';
     }
 
-    init(image, name) {
+    async init(image, name) {
         super.init(image, name);
-        this.estimate();
+        await this.estimate();
     }
 }
 

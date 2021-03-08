@@ -14,13 +14,34 @@ class PoseMatch {
         this.state = 'notReady';
         this.currentScore = null;
         this.data = new Map();
-        this.data.set(4, new PoseData('pose1', '/poseMatch/images/pose1.png'));
-        this.data.set(9, new PoseData('pose2', '/poseMatch/images/pose2.png'));
-        this.data.set(14, new PoseData('pose3', '/poseMatch/images/pose3.png'));
-        this.data.set(0, new PoseData('logo', '/poseMatch/images/logo.png'));
-        this.data.set(1, new PoseData('countdown3', '/poseMatch/images/3.png'));
-        this.data.set(2, new PoseData('countdown2', '/poseMatch/images/2.png'));
-        this.data.set(3, new PoseData('countdown1', '/poseMatch/images/1.png'));
+        this.data.set(
+            0,
+            new PoseData('logo', 'https://i.ibb.co/mNkZ1QR/logo.png')
+        );
+        this.data.set(
+            1,
+            new PoseData('countdown3', 'https://i.ibb.co/Fm8GPfW/3.png')
+        );
+        this.data.set(
+            2,
+            new PoseData('countdown2', 'https://i.ibb.co/QJj76kp/2.png')
+        );
+        this.data.set(
+            3,
+            new PoseData('countdown1', 'https://i.ibb.co/vq54MxZ/1.png')
+        );
+        this.data.set(
+            4,
+            new PoseData('pose1', 'https://i.ibb.co/s22Q6tg/pose1.png')
+        );
+        this.data.set(
+            9,
+            new PoseData('pose2', 'https://i.ibb.co/swGpxyb/pose2.png')
+        );
+        this.data.set(
+            14,
+            new PoseData('pose3', 'https://i.ibb.co/B6GQkPg/pose3.png')
+        );
         this.data.set(19, new PoseData('stop', null));
 
         this.server = new PoseMatchServer();
