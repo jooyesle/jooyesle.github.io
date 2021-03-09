@@ -45,9 +45,9 @@ class PoseEstimationManager {
             if (performance.now() - prev > 100) {
                 if (
                     PoseMatch.getInstance().getViewManager().state ==
-                        'playing' ||
-                    PoseMatch.getInstance().getViewManager().state == 'stop' ||
-                    PoseMatch.getInstance().getViewManager().state == 'reset'
+                    'playing' /* ||
+                     PoseMatch.getInstance().getViewManager().state == 'stop' ||
+                    PoseMatch.getInstance().getViewManager().state == 'reset'*/
                 ) {
                     PoseMatch.getInstance().getPEManager().estimate();
                 }

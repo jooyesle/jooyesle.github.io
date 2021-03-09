@@ -122,7 +122,10 @@ class GameView extends PoseView {
 
     setKeyPoints(idx) {
         super.setKeyPoints(null);
-        this.keyPoints = this.keyPointsList[idx];
+        this.keyPoints = new Array(17);
+        for (let i = 0; i < 17; i++) {
+            this.keyPoints[i] = this.keyPointsList[idx][i].slice();
+        }
         for (let i = 0; i < this.keyPoints.length; i++) {
             this.keyPoints[i][0] = 320 - this.keyPoints[i][0];
         }

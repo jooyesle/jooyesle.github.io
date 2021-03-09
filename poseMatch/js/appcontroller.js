@@ -196,6 +196,10 @@ AppController.prototype.hangup = async function () {
     //this.connectDeviceButton.disabled = true;
     //this.meetNowButton.disabled = true;
 
+    PoseMatch.getInstance().getTimer().stop();
+    PoseMatch.getInstance().getViewManager().setState('reset', this.user);
+    PoseMatch.getInstance().getServer().resetGame();
+
     localvideoName.innerHTML = '';
     await this.call_.hangup();
     await this.resource_free();
